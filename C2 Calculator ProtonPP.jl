@@ -65,6 +65,21 @@ function reshapevector(vector, i)
     return (newvector)
 end
 
+# Defining a function to create m* vectors from C2 vectors, deletes outliers
+function Emass(C2vector)
+    Emassvector = []
+    Emass = 0
+    for j in range(1,length(C2vector),step=1)
+        if (j==length(C2vector))
+            Emass = C2vector[j]/C2vector[1]
+        else
+            Emass = C2vector[j]/C2vector[j+1]
+        end
+        push!(Emassvector,Emass)
+    end
+    return(Emassvector)
+end
+
 slices = [27:40,27:40,27:40,23:40,25:38,25:35,24:42]
 
 # For loop Iterating over the "TX" files indicating source time
@@ -164,6 +179,7 @@ for i in range(0,48,step=8)
             slice = 19:length(jackestimates)-19
             resjack = reshapevector(jackestimates,i)
             reserror = reshapevector(stderror,i)
+
             #             Plot Real Part With Error                 #
             zoomplot=plot(slice,resjack[slice],marker=(:circle),legend=false,grid=false,yerror=reserror[slice])
             xlabel!("t -> shifted left by $i");ylabel!("Re(<C₂>)");title!("Proton-PP Re(<C₂>)(t)");
@@ -171,9 +187,18 @@ for i in range(0,48,step=8)
             #display(mec2plot)
             cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
             savefig("Zoomed in - T=$(Tindex), $(rdir).png")
-            global dataoutfile = open("C2ProtonOutput.txt","a")
-            write(dataoutfile,string(resjack[slices[Int((i/8)+1)]],"\n"))
-            close(dataoutfile)
+            #global dataoutfile = open("C2ProtonOutput.txt","a")
+            #write(dataoutfile,string(resjack[slices[Int((i/8)+1)]],"\n"))   # Not Used for now #
+            #close(dataoutfile)
+
+            #             Plot Real Part                            #
+            Emassplot=plot(1:length(Emass(jackestimates)),Emass(jackestimates),marker=(:circle),legend=false)
+            xlabel!("t");ylabel!("m*");title!("Proton PP m*(t)")
+            # Displaying plots takes a while, so I don't do it
+            #display(mec2plot)
+            cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
+            savefig("EFFECTIVE MASS T=$(Tindex), $(rdir).png")
+            println("Emass: $(Emass(jackestimates))")
         end
 
 
