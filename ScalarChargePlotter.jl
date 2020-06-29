@@ -20,7 +20,7 @@ global Tindex = 0
 cd("C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex")
 rdir = [i for i in readdir()]
 global k=1
-for i in range(1,length(n_datamatrix[:,1]),step=2)
+@progress (name="Plotting...") for i in range(1,length(n_datamatrix[:,1]),step=2)
     cd("C:\\Users\\Drew\\Desktop\\C3Graphs\\Scalar Charge\\RealEC3(t)")
     reC3plot=plot(0:length(n_datamatrix[i,:])-1,n_datamatrix[i,:],marker=(:circle),legend=false,)#yerror=n_datamatrix[i+1,:])
     xlabel!("t");ylabel!("Re(<C₃>)");title!("Scalar Charge Re(<C₃>)(t)")
@@ -28,7 +28,8 @@ for i in range(1,length(n_datamatrix[:,1]),step=2)
     #display(meC3plot)
     suffix = rdir[k]
     savefig("T=$(Tindex), $(suffix).png")
-    println("plotted C:\\Users\\Drew\\Desktop\\C3Graphs\\Scalar Charge\\RealEC3(t)\\T=$(Tindex), $(suffix).png")
+    #println("plotted C:\\Users\\Drew\\Desktop\\C3Graphs\\Scalar Charge\\RealEC3(t)\\T=$(Tindex), $(suffix).png")
+    # Not needed due to loading bar :)
     if (k==16)
         global k=1
         global Tindex = Tindex + 8
@@ -36,7 +37,7 @@ for i in range(1,length(n_datamatrix[:,1]),step=2)
         global k=k+1
     end
 end
-
+close(datafile)
 println("")
 println("Done")
 println("** Plotted with NO Error bars **")
