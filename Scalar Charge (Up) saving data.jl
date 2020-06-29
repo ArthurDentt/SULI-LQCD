@@ -6,6 +6,10 @@ println("Beginning output...")
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
 
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\ScalarChargeData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\ScalarChargeData.txt")
+end
+
 # Defining a function to go from a complex number z to |z|
 # Maybe there is already one for this but I didn't find it lol
 function modulus(z)
