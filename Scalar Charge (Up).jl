@@ -1,4 +1,5 @@
 using Plots
+using Statistics
 #Starting the process at T0 folder in AMA
 Tindex=0
 println("Beginning output...")
@@ -150,11 +151,11 @@ for i in range(0,48,step=8)
 
         # Filling jackknife estimate vector
         for k in range(1,length(jackreplicates),step=1)
-            push!(jackestimates,real(mean(jackreplicates[k])))
+            push!(jackestimates,real(mean(jackreplicates[k]))/8768.7709394415)
         end
 
         #             Plot Real Part                            #
-        reC3plot=plot(1:length(jackestimates),jackestimates,marker=(:circle),legend=false,yerror=stderror)
+        reC3plot=plot(1:length(jackestimates),jackestimates,marker=(:circle),legend=false)
         xlabel!("t");ylabel!("Re(<C₃>)");title!("Scalar Charge Re(<C₃>)(t)")
         # Displaying plots takes a while, so I don't do it
         #display(meC3plot)
