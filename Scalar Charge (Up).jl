@@ -64,7 +64,7 @@ function Jackrep(datavector)
 end
 
 # For loop Iterating over the "TX" files indicating source time
-for i in range(0,48,step=8)
+@progress (name= "Scanning through files..." ) for i in range(0,48,step=8)
     Tindex=i
     # I'm going to leave my directory path here so you can see how this works
     # and what to change should be fairly clear
@@ -83,7 +83,7 @@ for i in range(0,48,step=8)
         stderror = []
 
         # Starting the main loop running over each text file ending in .dat.###
-        for i in range(0,42,step=1)
+        @progress (name = "Gauge config $i, Position $j, T=$Tindex...") for i in range(0,42,step=1)
             findex = 748 + i * 16
             try
                 global test_file=open("nuc3pt.dat.$findex","r+");
