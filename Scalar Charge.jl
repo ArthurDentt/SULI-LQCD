@@ -161,9 +161,6 @@ end
 
         # This is where finding C₃(t) ends #
 
-        # Printing confirmation and path of completed file
-        println("Done with $dir")
-
         # Resetting directory back to TX so that we can append x,y,z onto it
         # (Also so we don't get the wrong result from "readdir()" when we start again)
         dir="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
