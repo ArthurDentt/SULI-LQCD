@@ -83,7 +83,7 @@ end
 slices = [27:40,27:40,27:40,23:40,25:38,25:35,24:42]
 
 # For loop Iterating over the "TX" files indicating source time
-for i in range(0,48,step=8)
+@progress (name="Plotting...") for i in range(0,48,step=8)
     Tindex=i
     # I'm going to leave my directory path here so you can see how this works
     # and what to change should be fairly clear
@@ -100,7 +100,7 @@ for i in range(0,48,step=8)
         realEC2=[] # Real part of expectation value of C₂(t)
         jackreplicates = [] # matrix of jackknife replicates
         stderror = [] # error vector sqrt(variance(jackknife))
-        jackestimates = []
+        global jackestimates = []
 
         # Starting the main loop running over each text file ending in .dat.###
         for k in range(0,42,step=1)
@@ -180,25 +180,25 @@ for i in range(0,48,step=8)
             resjack = reshapevector(jackestimates,i)
             reserror = reshapevector(stderror,i)
 
-            #             Plot Real Part With Error                 #
-            zoomplot=plot(slice,resjack[slice],marker=(:circle),legend=false,grid=false,yerror=reserror[slice])
-            xlabel!("t -> shifted left by $i");ylabel!("Re(<C₂>)");title!("Proton-PP Re(<C₂>)(t)");
+            #             zoomed-in plot                #
+            #zoomplot=plot(slice,resjack[slice],marker=(:circle),legend=false,grid=false,yerror=reserror[slice])
+            #xlabel!("t -> shifted left by $i");ylabel!("Re(<C₂>)");title!("Proton-PP Re(<C₂>)(t)");
             # Displaying plots takes a while, so I don't do it
             #display(mec2plot)
-            cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
-            savefig("Zoomed in - T=$(Tindex), $(rdir).png")
+            #cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
+            #savefig("Zoomed in - T=$(Tindex), $(rdir).png")
             #global dataoutfile = open("C2ProtonOutput.txt","a")
             #write(dataoutfile,string(resjack[slices[Int((i/8)+1)]],"\n"))   # Not Used for now #
             #close(dataoutfile)
 
-            #             Plot Real Part                            #
-            Emassplot=plot(1:length(Emass(jackestimates)),Emass(jackestimates),marker=(:circle),legend=false)
-            xlabel!("t");ylabel!("m*");title!("Proton PP m*(t)")
+            #             Ratio plot C2[t] / C2[t+1]                            #
+            #Emassplot=plot(1:length(Emass(jackestimates)),Emass(jackestimates),marker=(:circle),legend=false)
+            #xlabel!("t");ylabel!("m*");title!("Proton PP m*(t)")
             # Displaying plots takes a while, so I don't do it
             #display(mec2plot)
-            cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
-            savefig("EFFECTIVE MASS T=$(Tindex), $(rdir).png")
-            println("Emass: $(Emass(jackestimates))")
+            #cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
+            #savefig("EFFECTIVE MASS T=$(Tindex), $(rdir).png")
+            #println("Emass: $(Emass(jackestimates))")
         end
 
 
