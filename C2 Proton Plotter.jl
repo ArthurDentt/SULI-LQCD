@@ -6,7 +6,7 @@ println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 
-global datafile=open("ProtonC2Data.txt","r");
+global datafile=open("C2ProtonData.txt","r");
 datamatrix=readlines(datafile)
 datamatrix = [split(split(split(split(datamatrix[i],"Any")[2],"[")[2],"]")[1], ",") for i in range(1,length(datamatrix),step=1)]
 
