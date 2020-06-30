@@ -6,6 +6,10 @@ Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
 
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\ProtonC2Data.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\ProtonC2Data.txt")
+end
+
 # Defining a function to go from a complex number z to |z|
 # Maybe there is already one for this but I didn't find it lol
 function modulus(z)
@@ -180,36 +184,13 @@ slices = [27:40,27:40,27:40,23:40,25:38,25:35,24:42]
             resjack = reshapevector(jackestimates,i)
             reserror = reshapevector(stderror,i)
 
-            #             zoomed-in plot                #
-            #zoomplot=plot(slice,resjack[slice],marker=(:circle),legend=false,grid=false,yerror=reserror[slice])
-            #xlabel!("t -> shifted left by $i");ylabel!("Re(<C₂>)");title!("Proton-PP Re(<C₂>)(t)");
-            # Displaying plots takes a while, so I don't do it
-            #display(mec2plot)
-            #cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
-            #savefig("Zoomed in - T=$(Tindex), $(rdir).png")
-            #global dataoutfile = open("C2ProtonOutput.txt","a")
-            #write(dataoutfile,string(resjack[slices[Int((i/8)+1)]],"\n"))   # Not Used for now #
-            #close(dataoutfile)
-
-            #             Ratio plot C2[t] / C2[t+1]                            #
-            #Emassplot=plot(1:length(Emass(jackestimates)),Emass(jackestimates),marker=(:circle),legend=false)
-            #xlabel!("t");ylabel!("m*");title!("Proton PP m*(t)")
-            # Displaying plots takes a while, so I don't do it
-            #display(mec2plot)
-            #cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
-            #savefig("EFFECTIVE MASS T=$(Tindex), $(rdir).png")
-            #println("Emass: $(Emass(jackestimates))")
         end
 
 
-        #             Plot Real Part With Error                 #
-        rec2plot=plot(1:length(jackestimates),jackestimates,marker=(:circle),legend=false,grid=false,yerror=stderror)
-        xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton-PP Re(<C₂>)(t)");
-        # Displaying plots takes a while, so I don't do it
-        #display(mec2plot)
-        cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
-        savefig("T=$(Tindex), $(rdir).png")
-
+        cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+        global dataoutfile = open("ProtonC2Data.txt","a")
+        write(dataoutfile,string(jackestimates,"\n", stderror, "\n"))   # Not Used for now #
+        close(dataoutfile)
 
         # This is where finding C₂(t) ends #
 
