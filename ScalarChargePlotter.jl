@@ -15,14 +15,14 @@ for i in range(1,length(datamatrix),step=1)
     end
     n_datamatrix[i,:]=datavector
 end
-
+C2T=188986
 global Tindex = 0
 cd("C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex")
 rdir = [i for i in readdir()]
 global k=1
 @progress (name="Plotting...") for i in range(1,length(n_datamatrix[:,1]),step=2)
     cd("C:\\Users\\Drew\\Desktop\\C3Graphs\\Scalar Charge\\RealEC3(t)")
-    reC3plot=plot(0:length(n_datamatrix[i,:])-1,n_datamatrix[i,:],marker=(:circle),legend=false,)#yerror=n_datamatrix[i+1,:])
+    reC3plot=plot(0:length(n_datamatrix[i,:])-1,n_datamatrix[i,:]/C2T,marker=(:circle),legend=false)#yerror=n_datamatrix[i+1,:])
     xlabel!("t");ylabel!("Re(<C₃>)");title!("Scalar Charge Re(<C₃>)(t)")
     # Displaying plots takes a while, so I don't do it
     #display(meC3plot)
