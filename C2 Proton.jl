@@ -6,8 +6,8 @@ Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
 
-if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\ProtonC2Data.txt"))
-    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\ProtonC2Data.txt")
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C2ProtonData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C2ProtonData.txt")
 end
 
 # Defining a function to go from a complex number z to |z|
@@ -188,7 +188,7 @@ slices = [27:40,27:40,27:40,23:40,25:38,25:35,24:42]
 
 
         cd("C:\\Users\\Drew\\github\\SULI-LQCD")
-        global dataoutfile = open("ProtonC2Data.txt","a")
+        global dataoutfile = open("C2ProtonData.txt","a")
         write(dataoutfile,string(jackestimates,"\n", stderror, "\n"))   # Not Used for now #
         close(dataoutfile)
 
