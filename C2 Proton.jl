@@ -226,15 +226,15 @@ close(dataoutfile)
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-plot(1:length(finalvals),finalvals,markerstrokecolor=(:black),marker=(:circle),yerror=stderrors,legend=false,dpi=300)
+plot(1:length(finalvals),finalvals,markerstrokecolor=(:black),marker=(:circle),yerror=stderrors,legend=false,dpi=300,grid=false)
 xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton Re(<C₂>)(t)")
 savefig("Proton C2 Plot.png")
 
-plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300,yerror=EffmassSE)
+plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300,yerror=EffmassSE,grid=false)
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot.png")
 
-plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300)
+plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300,grid=false)
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot no Error.png")
 
