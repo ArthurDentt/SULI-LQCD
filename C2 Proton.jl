@@ -77,7 +77,27 @@ function Emass(C2vector)
         end
         push!(Emassvector,Emass)
     end
+    Emassvector=real(log.(Complex.(Emassvector)))
     return(Emassvector)
+end
+
+function EmassSE(C2vector,C2SEvector)
+    EmassSEvector = []
+    EmassSE = 0
+    for i in range(1,length(C2vector),step=1)
+        if (i==length(C2vector))
+            a = (C2SEvector[i]/(C2vector[1]))
+            b = (C2vector[i]*C2SEvector[1]/(C2vector[1]^2))
+            EmassSE = sqrt(a^2 + b^2)*C2vector[1]/C2vector[i]
+        else
+            a = (C2SEvector[i]/(C2vector[i+1]))
+            b = (C2vector[i]*C2SEvector[i+1]/(C2vector[i+1]^2))
+            EmassSE = sqrt(a^2 + b^2)*C2vector[i+1]/C2vector[i]
+        end
+        push!(EmassSEvector,EmassSE)
+    end
+    EmassSEvector=real(log.(Complex.(EmassSEvector)))
+    return(EmassSEvector)
 end
 
 ################################################################################
@@ -196,14 +216,28 @@ for i in range(1,length(alldata[1,:]),step=1)
     finalvals[i]=mean(alldata[:,i])
 end
 
+Effmass = Emass(finalvals)
+EffmassSE = EmassSE(finalvals,stderrors)
+
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
-global dataoutfile = open("C2ProtonData.txt","a")
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n"))
+global dataoutfile = open("C2ProtonData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmasses, "\n", EffmassSE, "\n"))
 close(dataoutfile)
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
+
 plot(1:length(finalvals),finalvals,markerstrokecolor=(:black),marker=(:circle),yerror=stderrors,legend=false,dpi=300)
 xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton Re(<C₂>)(t)")
 savefig("Proton C2 Plot.png")
+
+plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300,yerror=EffmassSE)
+xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
+savefig("Proton Emass Plot.png")
+
+plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300)
+xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
+savefig("Proton Emass Plot no Error.png")
+
+println("m* Estimate: $(mean(Effmasses[3:14]))")
 # Note: because this is all in a big loop, you won't see anything in the workspace
 # variable explorer :(
