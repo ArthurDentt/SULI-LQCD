@@ -1,6 +1,6 @@
 using Plots
 using Statistics
-
+using LsqFit
 #Starting the process at T0 folder in AMA
 Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
@@ -222,6 +222,17 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
 
+fitmassreps = zeros((2,length(binnedmeans[:,1])))
+plateau = 7:11
+model(t,p) = p[1]*exp.(-p[2]*t)
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    fit = curve_fit(model,plateau,binnedmeans[i,plateau],[-1000000,.71])
+    fitmassreps[:,i] = fit.param
+end
+
+EffectiveMass = mean(fitmassreps[2,:])
+EffectiveMassSE = JackSE(fitmassreps[2,:])
+
 stderrors = zeros(length(binnedmeans[1,:]))
 
 for i in range(1,length(binnedmeans[1,:]),step=1)
@@ -248,6 +259,8 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
 end
 
 
+
+
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2ProtonData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n"))
@@ -263,8 +276,6 @@ plot(1:length(finalvals),Effmass,markerstrokecolor=(:black),marker=(:circle),leg
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot.png")
 
-errsquared = EffmassSE[3:13].^2
-effmasserror = sqrt(sum(errsquared))
-println("m* Estimate: $(mean(Effmass[3:14])) +/- $effmasserror")
+println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE")
 # Note: because this is all in a big loop, you won't see anything in the workspace
 # variable explorer :(
