@@ -201,43 +201,74 @@ for i in range(1,length(alldata[:,1]),step=1)
     alldata[i,:] = reshapevector(alldata[i,:],Tindex)
 end
 
-for i in range(1,length(alldata[1,:]),step=1)
-    alldata[:,i] = Jackrep(alldata[:,i])
+# Binning data
+binnedmeans=zeros((39,length(alldata[1,:])))
+for i in range(1,39,step=1) # Iterate over gauge configurations
+    binnedmatrix = zeros((7*16,64))
+    for j in range(1,7*16,step=1)
+        index = i+39(j-1)
+        binnedmatrix[j,:]=alldata[index,:]
+    end
+    #Do jackknife error on binned data
+    meanvector = zeros(length(binnedmatrix[1,:]))
+    for j in range(1,length(binnedmatrix[1,:]),step=1)
+        meanvector[j]=mean(binnedmatrix[:,j])
+    end
+    binnedmeans[i,:] = meanvector
 end
 
-stderrors = zeros(length(alldata[1,:]))
-
-for i in range(1,length(alldata[1,:]),step=1)
-    stderrors[i] = JackSE(alldata[:,i])
+# Turn binnedmeans into binned Jack replicates
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
 
-finalvals = zeros(length(alldata[1,:]))
-for i in range(1,length(alldata[1,:]),step=1)
-    finalvals[i]=mean(alldata[:,i])
+stderrors = zeros(length(binnedmeans[1,:]))
+
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    stderrors[i] = JackSE(binnedmeans[:,i])
 end
 
-Effmass = Emass(finalvals)
-EffmassSE = EmassSE(finalvals,stderrors)
+finalvals = zeros(length(binnedmeans[1,:]))
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    finalvals[i]=mean(binnedmeans[:,i])
+end
+
+Effmassrep=zeros((39,length(alldata[1,:])))
+
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    Effmassrep[i,:]=Emass(binnedmeans[i,:])
+end
+
+Effmass = zeros(length(Effmassrep[1,:]))
+EffmassSE = zeros(length(Effmassrep[1,:]))
+
+for i in range(1,length(Effmassrep[1,:]),step=1)
+    Effmass[i]=mean(Effmassrep[:,i])
+    EffmassSE[i] = JackSE(Effmassrep[:,i])
+end
+
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2ProtonData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmasses, "\n", EffmassSE, "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n"))
 close(dataoutfile)
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-plot(1:length(finalvals),finalvals,markerstrokecolor=(:black),marker=(:circle),yerror=stderrors,legend=false,dpi=300,grid=false)
+plot(1:length(finalvals),finalvals,markerstrokecolor=(:black),marker=(:circle),yerror=stderrors,legend=false,dpi=600,grid=false)
 xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton Re(<C₂>)(t)")
 savefig("Proton C2 Plot.png")
 
-plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300,yerror=EffmassSE,grid=false)
+plot(1:length(finalvals),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot.png")
 
-plot(1:length(finalvals),Effmasses,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=300,grid=false)
+plot(1:length(finalvals),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,grid=false)
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot no Error.png")
 
-println("m* Estimate: $(mean(Effmasses[3:14]))")
+errsquared = EffmassSE[3:13].^2
+effmasserror = sqrt(sum(errsquared))
+println("m* Estimate: $(mean(Effmass[3:14])) +/- $effmasserror")
 # Note: because this is all in a big loop, you won't see anything in the workspace
 # variable explorer :(
