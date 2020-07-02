@@ -263,10 +263,6 @@ plot(1:length(finalvals),Effmass,markerstrokecolor=(:black),marker=(:circle),leg
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot.png")
 
-plot(1:length(finalvals),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,grid=false)
-xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
-savefig("Proton Emass Plot no Error.png")
-
 errsquared = EffmassSE[3:13].^2
 effmasserror = sqrt(sum(errsquared))
 println("m* Estimate: $(mean(Effmass[3:14])) +/- $effmasserror")
