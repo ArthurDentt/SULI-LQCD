@@ -10,12 +10,6 @@ if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C2PionData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C2PionData.txt")
 end
 
-# Defining a function to go from a complex number z to |z|
-# Maybe there is already one for this but I didn't find it lol
-function modulus(z)
-    sqrt(real(z)^2 + imag(z)^2)
-end
-
 # Defining a function to go from scientific notation to floats
 function value(str)
     parse(Float64,str)
