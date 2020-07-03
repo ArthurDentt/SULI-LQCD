@@ -8,9 +8,9 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 
 global datafile=open("C2ProtonData.txt","r");
 datamatrix=readlines(datafile)
-datamatrix = [split(split(split(split(datamatrix[i],"Any")[2],"[")[2],"]")[1], ",") for i in range(1,length(datamatrix),step=1)]
-
-slices = [4:9,11:16,21:26,27:32,35:40,43:48,51:56] # Slices for probing Emass
+EffectiveMass = parse(Float64,datamatrix[5])
+EffectiveMassSE = parse(Float64,datamatrix[6])
+datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
 
 # Take incoming data and reformat it into a matrix where each row is a datavector
 # rows: Data 1, Error 1, Data 2, Error 2, ... etc.
@@ -23,27 +23,24 @@ for i in range(1,length(datamatrix),step=1)
     n_datamatrix[i,:]=datavector
 end
 
-global Tindex = 0
-cd("C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex")
-rdir = [i for i in readdir()]
-global k=1
-@progress (name="Plotting...") for i in range(1,length(n_datamatrix[:,1]),step=2)
-    cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Proton_PP\\RealEC2(t)")
-    reC3plot=plot(0:length(n_datamatrix[i,:])-1,n_datamatrix[i,:],marker=(:circle),legend=false,yerror=n_datamatrix[i+1,:])
-    xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton_PP Re(<C₂>)(t)")
-    # Displaying plots takes a while, so I don't do it
-    #display(meC3plot)
-    suffix = rdir[k]
-    savefig("T=$(Tindex), $(suffix).png")
-    #println("plotted C:\\Users\\Drew\\Desktop\\C3Graphs\\Scalar Charge\\RealEC3(t)\\T=$(Tindex), $(suffix).png")
-    # Not needed due to loading bar :)
-    if (k==16)
-        global k=1
-        global Tindex = Tindex + 8
-    else
-        global k=k+1
-    end
-end
+C2 = n_datamatrix[1,:]
+C2SE = n_datamatrix[2,:]
+Effmass = n_datamatrix[3,:]
+EffmassSE = n_datamatrix[4,:]
+
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
+
+plot(1:length(C2),C2,markerstrokecolor=(:black),marker=(:circle),yerror=C2SE,legend=false,dpi=600,grid=false)
+xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton Re(<C₂>)(t)")
+savefig("Proton C2 Plot.png")
+
+plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
+xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
+savefig("Proton Emass Plot.png")
+
+println("------------------------------------------------------")
+println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE")
+
 close(datafile)
 println("")
 println("Done")
