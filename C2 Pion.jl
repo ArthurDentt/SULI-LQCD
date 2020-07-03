@@ -1,8 +1,14 @@
 using Plots
+using Statistics
+using LsqFit
 #Starting the process at T0 folder in AMA
 Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
+
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C2PionData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C2PionData.txt")
+end
 
 # Defining a function to go from a complex number z to |z|
 # Maybe there is already one for this but I didn't find it lol
@@ -12,11 +18,7 @@ end
 
 # Defining a function to go from scientific notation to floats
 function value(str)
-    parts = split(str,"e")
-    digits = parse(Float64,parts[1])
-    power = parse(Int,parts[2])
-    number=digits*(10.0^(power))
-    return(number)
+    parse(Float64,str)
 end
 
 # Defining a function to find the SE of a vector of Jackknife Expectation values
@@ -50,8 +52,64 @@ function Jackrep(datavector)
     return(expectvector)
 end
 
+# Defining a function to reshape vectors how I want for zoomed plots
+function reshapevector(vector, i)
+    newvector = zeros(length(vector))
+    for j in range(1,length(vector),step=1)
+        if ((i+j) <= length(vector))
+            newvector[j] = vector[i+j]
+        else
+            newvector[j] = vector[(i+j)%length(vector)]
+        end
+    end
+    return (newvector)
+end
+
+# Defining a function to create m* vectors from C2 vectors, deletes outliers
+function Emass(C2vector)
+    Emassvector = []
+    Emass = 0
+    for j in range(1,length(C2vector),step=1)
+        if (j==length(C2vector))
+            Emass = C2vector[j]/C2vector[1]
+        else
+            Emass = C2vector[j]/C2vector[j+1]
+        end
+        push!(Emassvector,Emass)
+    end
+    Emassvector=real(log.(Complex.(Emassvector)))
+    return(Emassvector)
+end
+
+function EmassSE(C2vector,C2SEvector)
+    EmassSEvector = []
+    EmassSE = 0
+    for i in range(1,length(C2vector),step=1)
+        if (i==length(C2vector))
+            a = (C2SEvector[i]/(C2vector[1]))
+            b = (C2vector[i]*C2SEvector[1]/(C2vector[1]^2))
+            EmassSE = sqrt(a^2 + b^2)*C2vector[1]/C2vector[i]
+        else
+            a = (C2SEvector[i]/(C2vector[i+1]))
+            b = (C2vector[i]*C2SEvector[i+1]/(C2vector[i+1]^2))
+            EmassSE = sqrt(a^2 + b^2)*C2vector[i+1]/C2vector[i]
+        end
+        push!(EmassSEvector,EmassSE)
+    end
+    EmassSEvector=real(log.(Complex.(EmassSEvector)))
+    return(EmassSEvector)
+end
+
+################################################################################
+########################### END OF FUNCTIONS ###################################
+################################################################################
+
 # For loop Iterating over the "TX" files indicating source time
-for i in range(0,48,step=8)
+numfiles=7*16*39
+tempdata = []
+alldata = zeros(ComplexF64,(numfiles,64))
+global C2 = []
+@progress (name="Plotting...") for i in range(0,48,step=8)
     Tindex=i
     # I'm going to leave my directory path here so you can see how this works
     # and what to change should be fairly clear
@@ -63,15 +121,11 @@ for i in range(0,48,step=8)
         dir = string(dir, "\\", rdir)
         cd(dir)
 
-        Operatormatrix = [] # It's a matrix full of operator values
-        C2 = [] # Defining C₂(t,μₐ) -> μₐ is Gauge Config α
-        jackreplicates = []
-        stderror = []
-        jackestimates = []
+        global filevector = []
 
         # Starting the main loop running over each text file ending in .dat.###
-        for i in range(0,42,step=1)
-            findex = 748 + i * 16
+        for k in range(0,42,step=1)
+            findex = 748 + k * 16
             try
                 global test_file=open("nuc3pt.dat.$findex","r+");
             catch (SystemError)
@@ -89,60 +143,37 @@ for i in range(0,48,step=8)
             times=[]; # times
             linematrices=[] # matrix full of pieces of each line in the relevant data file
 
+
             # pushing split lines into a matrix
-            for i in range(2,length(lines)-1,step=1)
-                push!(linematrices,split(lines[i]))
-                push!(times,parse(Int,linematrices[i-1][1]))
+            for l in range(2,length(lines)-1,step=1)
+                push!(linematrices,split(lines[l]))
+                push!(times,parse(Int,linematrices[l-1][1]))
             end
 
-            # Define operator arrays
             Op1 = zeros(ComplexF64,(length(times)))
 
             # Fill operator arrays
-            for i in range(1,length(linematrices),step=1)
-                Op1[i]=value(linematrices[i][2])+(value(linematrices[i][3]))im
+            for l in range(1,length(linematrices),step=1)
+                Op1[l]=value(linematrices[l][2])+(value(linematrices[l][3]))im
 
             end
 
-            push!(Operatormatrix,Op1[:])
-            #println("Pushed Op1 to Operatormatrix, Filename: \"nuc3pt.dat.$findex\"")
+            push!(filevector,Op1[:])
 
         end
 
-        # Rearrange Operatormatrix into C₂(t,μₐ)
-        for i in range(1,length(Operatormatrix[1]),step=1)
-            timeslice=[] # Slice t=i across all μₐ
-            for j in range(1,length(Operatormatrix),step=1)
-                push!(timeslice,Operatormatrix[j][i])
+        # Rearrange Operatormatrix into C₂(μₐ,t)
+        for k in range(1,length(filevector),step=1)
+            gaugeconfig=[] # Slice t=l across all μₐ
+            for l in range(1,length(filevector[1]),step=1)
+                push!(gaugeconfig,filevector[k][l])
             end
-
-            push!(C2,timeslice)
+            push!(C2,gaugeconfig)
         end
 
-        # Filling jackreplicates matrix
-        for k in range(1,length(C2),step=1)
-            jackknifevector=Jackrep(C2[k])
-            push!(jackreplicates,jackknifevector)
+        for i in range(1,length(C2),step=1)
+            push!(tempdata,C2[i])
         end
-
-        # Filling Standard error matrix
-        for k in range(1,length(jackreplicates),step=1)
-            SE = JackSE(jackreplicates[k])
-            push!(stderror,SE)
-        end
-
-        # Filling jackknife estimate vector
-        for k in range(1,length(jackreplicates),step=1)
-            push!(jackestimates,real(mean(jackreplicates[k])))
-        end
-
-        #             Plot Real Part                            #
-        rec2plot=plot(1:length(jackestimates),jackestimates,marker=(:circle),legend=false,yerror=stderror)
-        xlabel!("t");ylabel!("Re(<C₂>)");title!("Pion-GAM_5 Re(<C₂>)(t)")
-        # Displaying plots takes a while, so I don't do it
-        #display(mec2plot)
-        cd("C:\\Users\\Drew\\Desktop\\C2Graphs\\Pion\\RealEC2(t)")
-        savefig("T=$(Tindex), $(rdir).png")
 
         # This is where finding C₂(t) ends #
 
@@ -155,3 +186,70 @@ for i in range(0,48,step=8)
         cd(dir)
     end
 end
+close(test_file)
+for i in range(1,length(C2),step=1)
+    alldata[i,:]=C2[i]
+end
+alldata=real.(alldata)
+
+# Binning data
+binnedmeans=zeros((39,length(alldata[1,:])))
+for i in range(1,39,step=1) # Iterate over gauge configurations
+    binnedmatrix = zeros((7*16,64))
+    for j in range(1,7*16,step=1)
+        index = i+39(j-1)
+        binnedmatrix[j,:]=alldata[index,:]
+    end
+    #Do jackknife error on binned data
+    meanvector = zeros(length(binnedmatrix[1,:]))
+    for j in range(1,length(binnedmatrix[1,:]),step=1)
+        meanvector[j]=mean(binnedmatrix[:,j])
+    end
+    binnedmeans[i,:] = meanvector
+end
+
+# Turn binnedmeans into binned Jack replicates
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
+end
+
+fitmassreps = zeros((2,length(binnedmeans[:,1])))
+plateau = 5:10
+model(t,p) = p[1]*exp.(-p[2]*t)
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    fit = curve_fit(model,plateau,binnedmeans[i,plateau],[1,.1])
+    fitmassreps[:,i] = fit.param
+end
+
+EffectiveMass = mean(fitmassreps[2,:])
+EffectiveMassSE = JackSE(fitmassreps[2,:])
+
+stderrors = zeros(length(binnedmeans[1,:]))
+
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    stderrors[i] = JackSE(binnedmeans[:,i])
+end
+
+finalvals = zeros(length(binnedmeans[1,:]))
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    finalvals[i]=mean(binnedmeans[:,i])
+end
+
+Effmassrep=zeros((39,length(alldata[1,:])))
+
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    Effmassrep[i,:]=Emass(binnedmeans[i,:])
+end
+
+Effmass = zeros(length(Effmassrep[1,:]))
+EffmassSE = zeros(length(Effmassrep[1,:]))
+
+for i in range(1,length(Effmassrep[1,:]),step=1)
+    Effmass[i]=mean(Effmassrep[:,i])
+    EffmassSE[i] = JackSE(Effmassrep[:,i])
+end
+
+cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n"))
+close(dataoutfile)
