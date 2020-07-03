@@ -175,11 +175,6 @@ global C2 = []
             push!(tempdata,C2[i])
         end
 
-        #cd("C:\\Users\\Drew\\github\\SULI-LQCD")
-        #global dataoutfile = open("C2ProtonData TESTING.txt","a")
-        #write(dataoutfile,string(jackestimates,"\n", stderror, "\n"))   # Not Used for now #
-        #close(dataoutfile)
-
         # This is where finding C₂(t) ends #
 
         # Printing confirmation and path of completed file
