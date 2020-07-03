@@ -42,7 +42,4 @@ println("------------------------------------------------------")
 println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE")
 
 close(datafile)
-println("")
 println("Done")
-println("** Plotted with NO Error bars **")
-println("")
