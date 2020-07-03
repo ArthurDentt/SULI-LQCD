@@ -258,24 +258,7 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
 
-
-
-
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2ProtonData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n"))
 close(dataoutfile)
-
-cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
-
-plot(1:length(finalvals),finalvals,markerstrokecolor=(:black),marker=(:circle),yerror=stderrors,legend=false,dpi=600,grid=false)
-xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton Re(<C₂>)(t)")
-savefig("Proton C2 Plot.png")
-
-plot(1:length(finalvals),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
-xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
-savefig("Proton Emass Plot.png")
-
-println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE")
-# Note: because this is all in a big loop, you won't see anything in the workspace
-# variable explorer :(
