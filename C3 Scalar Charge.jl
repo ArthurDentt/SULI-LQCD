@@ -129,8 +129,8 @@ global C2 = []
             end
 
             # Reading to keyword, splitting lines, instantiating + zeroing everything
-            readuntil(test_file, "NUC_G5C_NP", keep = false)
-            reldata = readuntil(test_file, "ENDPROP", keep=false)
+            readuntil(test_file, "G0", keep = false)
+            reldata = readuntil(test_file, "END_NUC3PT", keep=false)
             lines=split(reldata,"\n")
 
             # This is where finding C₂(t) begins #
@@ -139,9 +139,9 @@ global C2 = []
 
 
             # pushing split lines into a matrix
-            for i in range(2,length(lines)-1,step=1)
+            for i in range(6,length(lines)-1,step=1)
                 push!(linematrices,split(lines[i]))
-                push!(times,parse(Int,linematrices[i-1][1]))
+                push!(times,parse(Int,linematrices[i-5][1]))
             end
 
             Op1 = zeros(ComplexF64,(length(times)))
