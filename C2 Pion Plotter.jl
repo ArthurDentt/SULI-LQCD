@@ -2,6 +2,15 @@
 using Plots
 using Statistics
 
+# Converts from unitless to MeV
+function massconvert(mass,massSE)
+    invspacing = 1.378
+    invspacingSE = .007
+    n_mass = mass*invspacing
+    n_massSE = sqrt( (mass*invspacingSE)^2 + (invspacing*massSE)^2 )
+    return([1000*n_mass,1000*n_massSE])
+end
+
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
@@ -28,6 +37,8 @@ C2SE = n_datamatrix[2,:]
 Effmass = n_datamatrix[3,:]
 EffmassSE = n_datamatrix[4,:]
 
+EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
+
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 plot(1:length(C2),C2,markerstrokecolor=(:black),marker=(:circle),yerror=C2SE,legend=false,dpi=600,grid=false)
@@ -39,7 +50,7 @@ xlabel!("t");ylabel!("m*");title!("Pion m*(t)")
 savefig("Pion Emass Plot.png")
 
 println("------------------------------------------------------")
-println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE")
+println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV")
 
 close(datafile)
 println("")
