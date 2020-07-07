@@ -3,12 +3,12 @@ using Statistics
 using LsqFit
 
 # This brings in C2(T) Proton as sourcedata
-#cd("C:\\Users\\Drew\\github\\SULI-LQCD")
-#global datafile=open("C2ProtonData.txt","r");
-#sourcedata=readlines(datafile)
-#close(datafile)
-#sourcedata = split(split(split(sourcedata[7],"[")[2],"]")[1], ",")
-#sourcedata = [parse(Float64,i) for i in sourcedata]
+cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+global datafile=open("C2ProtonData.txt","r");
+sourcedata=readlines(datafile)
+close(datafile)
+sourcedata = split(split(split(sourcedata[7],"[")[2],"]")[1], ",")
+sourcedata = [parse(Float64,i) for i in sourcedata]
 
 #Starting the process at T0 folder in AMA
 Tindex=0
@@ -221,9 +221,9 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
 end
 
 # This renormalizes by sourcedata
-#for i in range(1,length(binnedmeans[:,1]),step=1)
-#    binnedmeans[i,:] = binnedmeans[i,:]/abs(sourcedata[i])
-#end
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    binnedmeans[i,:] = binnedmeans[i,:]/abs(sourcedata[i])
+end
 
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
