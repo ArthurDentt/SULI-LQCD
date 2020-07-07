@@ -52,12 +52,12 @@ EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 plot(1:length(C3),C3,markerstrokecolor=(:black),marker=(:circle),yerror=C3SE,legend=false,dpi=600,grid=false)
-xlabel!("τ (τ=10 has been removed)");ylabel!("C₃/C₂(T)");title!("Scalar Charge C₃(τ,T)/C₂(T)")
-savefig("Scalar Charge C3 Plot.png")
+xlabel!("τ (τ=10 has been removed)");ylabel!("C₃/C₂(T)");title!("Axial Charge C₃(τ,T)/C₂(T)")
+savefig("Axial Charge C3 Plot.png")
 
 plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
-xlabel!("τ");ylabel!("m*");title!("Scalar Charge m*(τ,T)")
-savefig("Scalar Charge Emass Plot.png")
+xlabel!("τ");ylabel!("m*");title!("Axial Charge m*(τ,T)")
+savefig("Axial Charge Emass Plot.png")
 
 println("------------------------------------------------------")
 println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (Not sure if this has meaning)")
