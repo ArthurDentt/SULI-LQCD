@@ -60,7 +60,7 @@ xlabel!("τ");ylabel!("m*");title!("Axial Charge m*(τ,T)")
 savefig("Axial Charge Emass Plot.png")
 
 println("------------------------------------------------------")
-println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (Not sure if this has meaning)")
+println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (This has no meaning right now)")
 
 close(datafile)
 println("Done")
