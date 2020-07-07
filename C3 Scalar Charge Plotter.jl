@@ -15,9 +15,6 @@ println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 
-C2T=188167.6457778
-C2TSE=982.7230311587001
-
 global datafile=open("C3ScalarChargeData.txt","r");
 datamatrix=readlines(datafile)
 close(datafile)
@@ -39,7 +36,7 @@ C3 = []
 C3SE = []
 n_datamatrix[1,:]
 for i in range(1,length(n_datamatrix[1,:]),step=1)
-    if n_datamatrix[1,i] < 10^7
+    if n_datamatrix[1,i] < 10^9
         push!(C3,n_datamatrix[1,i])
         push!(C3SE,n_datamatrix[2,i])
     end
