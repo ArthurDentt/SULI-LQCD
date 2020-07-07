@@ -20,6 +20,7 @@ C2TSE=982.7230311587001
 
 global datafile=open("C3ScalarChargeData.txt","r");
 datamatrix=readlines(datafile)
+close(datafile)
 EffectiveMass = parse(Float64,datamatrix[5])
 EffectiveMassSE = parse(Float64,datamatrix[6])
 datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
@@ -34,9 +35,16 @@ for i in range(1,length(datamatrix),step=1)
     end
     n_datamatrix[i,:]=datavector
 end
+C3 = []
+C3SE = []
+n_datamatrix[1,:]
+for i in range(1,length(n_datamatrix[1,:]),step=1)
+    if n_datamatrix[1,i] < 10^7
+        push!(C3,n_datamatrix[1,i])
+        push!(C3SE,n_datamatrix[2,i])
+    end
+end
 
-C3 = n_datamatrix[1,:]
-C3SE = n_datamatrix[2,:]
 Effmass = n_datamatrix[3,:]
 EffmassSE = n_datamatrix[4,:]
 
@@ -44,11 +52,11 @@ EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 plot(1:length(C3),C3,markerstrokecolor=(:black),marker=(:circle),yerror=C3SE,legend=false,dpi=600,grid=false)
-xlabel!("t");ylabel!("Re(<C₃>)");title!("Scalar Charge Re(<C₃>)(t)")
+xlabel!("τ (τ=10 has been removed)");ylabel!("C₃/C₂(T)");title!("Scalar Charge C₃(τ,T)/C₂(T)")
 savefig("Scalar Charge C3 Plot.png")
 
 plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
-xlabel!("t");ylabel!("m*");title!("Scalar Charge m*(t)")
+xlabel!("τ");ylabel!("m*");title!("Scalar Charge m*(τ,T)")
 savefig("Scalar Charge Emass Plot.png")
 
 println("------------------------------------------------------")

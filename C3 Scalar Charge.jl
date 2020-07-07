@@ -1,6 +1,14 @@
 using Plots
 using Statistics
 using LsqFit
+
+cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+global datafile=open("C2ProtonData.txt","r");
+sourcedata=readlines(datafile)
+close(datafile)
+sourcedata = split(split(split(sourcedata[7],"[")[2],"]")[1], ",")
+sourcedata = [parse(Float64,i) for i in sourcedata]
+
 #Starting the process at T0 folder in AMA
 Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
@@ -118,7 +126,7 @@ global C2 = []
         global filevector = []
 
         # Starting the main loop running over each text file ending in .dat.###
-        for k in range(0,42,step=1)
+        @progress (name="T=$Tindex, $rdir") for k in range(0,42,step=1)
             findex = 748 + k * 16
             try
                 global test_file=open("nuc3pt.dat.$findex","r+");
@@ -209,6 +217,10 @@ end
 # Turn binnedmeans into binned Jack replicates
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
+end
+
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    binnedmeans[i,:] = binnedmeans[i,:]/abs(sourcedata[i])
 end
 
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
