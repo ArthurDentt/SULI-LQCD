@@ -118,7 +118,7 @@ global C2 = []
         global filevector = []
 
         # Starting the main loop running over each text file ending in .dat.###
-        for k in range(0,42,step=1)
+        @progress (name = "T=$Tindex, $rdir") for k in range(0,42,step=1)
             findex = 748 + k * 16
             try
                 global test_file=open("nuc3pt.dat.$findex","r+");
