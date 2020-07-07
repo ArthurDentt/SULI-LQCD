@@ -210,15 +210,14 @@ end
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
-sourcereps = binnedmeans[:,2]
+sourcereps = binnedmeans[:,9]
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
 model(t,p) = p[1]*exp.(-p[2]*t)
 for i in range(1,length(binnedmeans[:,1]),step=1)
-    fit = curve_fit(model,plateau,binnedmeans[i,plateau],[-1000000,.71])
+    global fit = curve_fit(model,plateau,binnedmeans[i,plateau],[-1000000,.71])
     fitmassreps[:,i] = fit.param
 end
-
 EffectiveMass = mean(fitmassreps[2,:])
 EffectiveMassSE = JackSE(fitmassreps[2,:])
 
