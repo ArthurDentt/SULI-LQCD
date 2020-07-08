@@ -222,7 +222,7 @@ end
 
 # This renormalizes by sourcedata
 for i in range(1,length(binnedmeans[:,1]),step=1)
-    binnedmeans[i,:] = binnedmeans[i,:]/abs(sourcedata[i])
+    binnedmeans[i,:] = binnedmeans[i,:]/(abs(sourcedata[i])*3.2)
 end
 
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
