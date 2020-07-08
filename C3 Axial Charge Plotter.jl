@@ -36,23 +36,22 @@ C3 = []
 C3SE = []
 n_datamatrix[1,:]
 for i in range(1,length(n_datamatrix[1,:]),step=1)
-    if n_datamatrix[1,i] < 10^9
+    if n_datamatrix[1,i] < 250
         push!(C3,n_datamatrix[1,i])
         push!(C3SE,n_datamatrix[2,i])
     end
 end
-
 Effmass = n_datamatrix[3,:]
 EffmassSE = n_datamatrix[4,:]
 
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-plot(1:length(C3),C3,markerstrokecolor=(:black),marker=(:circle),yerror=C3SE,legend=false,dpi=600,grid=false)
+plot(1:length(C3),C3,markerstrokecolor=(:black),marker=(:x),yerror=C3SE,legend=false,dpi=600,grid=false)
 xlabel!("τ (τ=10 has been removed)");ylabel!("C₃/C₂(T)");title!("Axial Charge C₃(τ,T)/C₂(T)")
 savefig("Axial Charge C3 Plot.png")
 
-plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
+plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:x),legend=false,dpi=600,yerror=EffmassSE,grid=false)
 xlabel!("τ");ylabel!("m*");title!("Axial Charge m*(τ,T)")
 savefig("Axial Charge Emass Plot.png")
 
