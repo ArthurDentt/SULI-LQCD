@@ -48,11 +48,11 @@ EffmassSE = n_datamatrix[4,:]
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-plot(1:length(C3),C3,markerstrokecolor=(:black),marker=(:x),yerror=C3SE,legend=false,dpi=600,grid=false)
-xlabel!("τ (τ=10 has been removed)");ylabel!("C₃/C₂(T)");title!("Vector Charge C₃(τ,T)/C₂(T)")
+scatter(1:length(C3[2:9]),C3[2:9],marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[2:9],legend=false,dpi=600,grid=false)
+xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
 savefig("Vector Charge C3 Plot.png")
 
-plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:x),legend=false,dpi=600,yerror=EffmassSE,grid=false)
+scatter(1:length(Effmass),Effmass,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),legend=false,dpi=600,yerror=EffmassSE,grid=false)
 xlabel!("τ");ylabel!("m*");title!("Vector Charge m*(τ,T)")
 savefig("Vector Charge Emass Plot.png")
 
