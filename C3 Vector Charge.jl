@@ -4,7 +4,7 @@ using LsqFit
 
 # This brings in C2(T) Proton as sourcedata
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
-global datafile=open("C2ProtonData.txt","r");
+global datafile=open("C2ProtonGGData.txt","r");
 sourcedata=readlines(datafile)
 close(datafile)
 sourcedata = split(split(split(sourcedata[7],"[")[2],"]")[1], ",")
