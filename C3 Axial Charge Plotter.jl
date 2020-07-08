@@ -15,9 +15,6 @@ println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 
-C2T=188167.6457778
-C2TSE=982.7230311587001
-
 global datafile=open("C3AxialChargeData.txt","r");
 datamatrix=readlines(datafile)
 close(datafile)
