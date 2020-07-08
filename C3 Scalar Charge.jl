@@ -156,7 +156,7 @@ global C2 = []
 
             # Fill operator arrays with U-D Quark Contributions
             for l in range(1,length(linematrices),step=1)
-                Op1[l]=value(linematrices[l][2])-value(linematrices[l][2])+(value(linematrices[l][3])-value(linematrices[l][5]))im
+                Op1[l]=value(linematrices[l][2])-value(linematrices[l][4])+(value(linematrices[l][3])-value(linematrices[l][5]))im
             end
             push!(filevector,Op1[:])
         end
