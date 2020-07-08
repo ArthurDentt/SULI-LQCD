@@ -219,8 +219,10 @@ for i in range(1,length(binnedmeans[:,1]),step=1)
     fitmassreps[:,i] = fit.param
 end
 EffectiveMass = mean(fitmassreps[2,:])
+Amplitude = mean(fitmassreps[1,:])
 EffectiveMassSE = JackSE(fitmassreps[2,:])
 
+Fitfunction(t) = Amplitude*ℯ^(-EffectiveMass*t)
 stderrors = zeros(length(binnedmeans[1,:]))
 
 for i in range(1,length(binnedmeans[1,:]),step=1)
@@ -245,9 +247,16 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     Effmass[i]=mean(Effmassrep[:,i])
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
+# Finding χ² of our fit
+chisq = 0
+for i in plateau
+    global chisq += ((finalvals[i] - Fitfunction(i))^2)/(stderrors[i]^2)
+end
+chisq = chisq / 2
+println("χ²/dof = $chisq")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2ProtonData.txt","a")
-#saving data to file -> C2, C2 error, m*, m* error,M*E , M*SE E, C2(T) replicates
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", sourcereps, "\n"))
+#saving data to file -> C2, C2 error, m*, m* error,M*E , M*SE E, C2(T) replicates, χ²
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", sourcereps, "\n", "χ²=$chisq", "\n"))
 close(dataoutfile)
