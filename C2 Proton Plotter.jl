@@ -41,11 +41,11 @@ EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-plot(1:length(C2),C2,markerstrokecolor=(:black),marker=(:circle),yerror=C2SE,legend=false,dpi=600,grid=false)
+plot(1:length(C2),C2,markerstrokecolor=(:black),marker=(:x),yerror=C2SE,legend=false,dpi=600,grid=false)
 xlabel!("t");ylabel!("Re(<C₂>)");title!("Proton Re(<C₂>)(t)")
 savefig("Proton C2 Plot.png")
 
-plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:circle),legend=false,dpi=600,yerror=EffmassSE,grid=false)
+plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:x),legend=false,dpi=600,yerror=EffmassSE,grid=false)
 xlabel!("t");ylabel!("m*");title!("Proton m*(t)")
 savefig("Proton Emass Plot.png")
 
