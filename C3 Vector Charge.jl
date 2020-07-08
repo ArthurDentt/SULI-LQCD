@@ -155,14 +155,11 @@ global C2 = []
 
             Op1 = zeros(ComplexF64,(length(times)))
 
-            # Fill operator arrays
+            # Fill operator arrays with U-D Quark Contribution
             for l in range(1,length(linematrices),step=1)
-                Op1[l]=value(linematrices[l][2])+(value(linematrices[l][3]))im
-
+                Op1[l]=value(linematrices[l][2])-value(linematrices[l][2])+(value(linematrices[l][3])-value(linematrices[l][5]))im
             end
-
             push!(filevector,Op1[:])
-
         end
 
         # Rearrange Operatormatrix into C₂(μₐ,t)
