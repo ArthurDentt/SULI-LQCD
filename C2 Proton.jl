@@ -210,7 +210,6 @@ end
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
-sourcereps = binnedmeans[:,9]
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
 model(t,p) = p[1]*exp.(-p[2]*t)
@@ -258,5 +257,5 @@ println("χ²/dof = $chisq")
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2ProtonData.txt","a")
 #saving data to file -> C2, C2 error, m*, m* error,M*E , M*SE E, C2(T) replicates, χ²
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", sourcereps, "\n", "χ²=$chisq", "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", "χ²=$chisq", "\n"))
 close(dataoutfile)
