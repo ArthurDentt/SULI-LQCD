@@ -14,6 +14,11 @@ end
 Scale = sqrt(2)
 plotrange = 2:9
 
+xtickvals = [i for i in range(0,9,step=1)]
+ytickvals = [(1.3 +.05*i) for i in range(0,8,step=1)]
+ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
+ytick0 = ["" for i in range(1,length(xtickvals),step=1)]
+
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
@@ -51,13 +56,16 @@ EffmassSE = n_datamatrix[4,:]
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-scatter(1:length(C3[plotrange]),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,legend=false,dpi=600,grid=false)
+scatter(1:length(plotrange),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
+    linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
+    legend=false,dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
+    ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box))
 xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
-savefig("Vector Charge C3 Plot.png")
+plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
+    xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
+    yticks=(ytickvals,ytick0))
 
-scatter(1:length(Effmass),Effmass,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),legend=false,dpi=600,yerror=EffmassSE,grid=false)
-xlabel!("τ");ylabel!("m*");title!("Vector Charge m*(τ,T)")
-savefig("Vector Charge Emass Plot.png")
+savefig("Vector Charge C3 Plot.png")
 
 println("------------------------------------------------------")
 println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (This has no meaning right now)")

@@ -12,7 +12,11 @@ function massconvert(mass,massSE)
 end
 
 Scale = sqrt(2)
-plotrange = 1:9
+plotrange = 2:9
+xtickvals = [i for i in range(0,9,step=1)]
+ytickvals = [1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2]
+ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
+ytick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
 println("Starting output...")
 
@@ -50,13 +54,16 @@ EffmassSE = n_datamatrix[4,:]
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-scatter(1:length(C3[plotrange]),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,legend=false,dpi=600,grid=false)
+scatter(1:length(plotrange),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
+    linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
+    legend=false,dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
+    ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box))
 xlabel!("τ");ylabel!("gₐ");title!("Axial Charge")
-savefig("Axial Charge C3 Plot.png")
+plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
+    xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
+    yticks=(ytickvals,ytick0))
 
-scatter(1:length(Effmass),Effmass,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),legend=false,dpi=600,yerror=EffmassSE,grid=false)
-xlabel!("τ");ylabel!("m*");title!("Axial Charge m*(τ,T)")
-savefig("Axial Charge Emass Plot.png")
+savefig("Axial Charge C3 Plot.png")
 
 println("------------------------------------------------------")
 println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (This has no meaning right now)")

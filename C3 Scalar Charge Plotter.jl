@@ -11,6 +11,13 @@ function massconvert(mass,massSE)
     return([1000*n_mass,1000*n_massSE])
 end
 Scale = sqrt(2)
+plotrange = 1:9
+
+xtickvals = [i for i in range(0,9,step=1)]
+ytickvals = [(0 +.5*i) for i in range(0,4,step=1)]
+ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
+ytick0 = ["" for i in range(1,length(xtickvals),step=1)]
+
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
@@ -21,7 +28,7 @@ close(datafile)
 EffectiveMass = parse(Float64,datamatrix[5])
 EffectiveMassSE = parse(Float64,datamatrix[6])
 datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
-plotrange = 1:9
+
 # Take incoming data and reformat it into a matrix where each row is a datavector
 # rows: Data 1, Error 1, Data 2, Error 2, ... etc.
 n_datamatrix  = zeros((length(datamatrix),length(datamatrix[1])))
@@ -48,13 +55,15 @@ EffmassSE = n_datamatrix[4,:]
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-scatter(1:length(C3[plotrange]),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,legend=false,dpi=600,grid=false)
+scatter(0:length(plotrange)-1,C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
+    linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
+    legend=false,dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
+    ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box))
 xlabel!("τ");ylabel!("gₛ");title!("Scalar Charge")
+plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
+    xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
+    yticks=(ytickvals,ytick0))
 savefig("Scalar Charge C3 Plot.png")
-
-scatter(1:length(Effmass),Effmass,marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),legend=false,dpi=600,yerror=EffmassSE,grid=false)
-xlabel!("τ");ylabel!("m*");title!("Scalar Charge m*(τ,T)")
-savefig("Scalar Charge Emass Plot.png")
 
 println("------------------------------------------------------")
 println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (This has no meaning right now)")
