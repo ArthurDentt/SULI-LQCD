@@ -210,7 +210,7 @@ end
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
-sourcereps = binnedmeans[:,9]
+sourcereps = binnedmeans[:,10]
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
 model(t,p) = p[1]*exp.(-p[2]*t)
