@@ -11,6 +11,8 @@ function massconvert(mass,massSE)
     return([1000*n_mass,1000*n_massSE])
 end
 
+plotrange = 2:9
+
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
@@ -48,7 +50,7 @@ EffmassSE = n_datamatrix[4,:]
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-scatter(1:length(C3[2:9]),C3[2:9],marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[2:9],legend=false,dpi=600,grid=false)
+scatter(1:length(C3[plotrange]),C3[plotrange],marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange],legend=false,dpi=600,grid=false)
 xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
 savefig("Vector Charge C3 Plot.png")
 

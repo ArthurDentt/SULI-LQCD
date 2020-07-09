@@ -21,7 +21,7 @@ close(datafile)
 EffectiveMass = parse(Float64,datamatrix[5])
 EffectiveMassSE = parse(Float64,datamatrix[6])
 datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
-
+plotrange = 1:9
 # Take incoming data and reformat it into a matrix where each row is a datavector
 # rows: Data 1, Error 1, Data 2, Error 2, ... etc.
 n_datamatrix  = zeros((length(datamatrix),length(datamatrix[1])))
@@ -48,7 +48,7 @@ EffmassSE = n_datamatrix[4,:]
 EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
-scatter(1:length(C3[2:9]),C3[2:9],marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[2:9],legend=false,dpi=600,grid=false)
+scatter(1:length(C3[plotrange]),C3[plotrange],marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange],legend=false,dpi=600,grid=false)
 xlabel!("τ");ylabel!("gₛ");title!("Scalar Charge")
 savefig("Scalar Charge C3 Plot.png")
 
