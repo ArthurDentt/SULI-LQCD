@@ -5,7 +5,7 @@ using LsqFit
 Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
-
+Index = 9
 if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C2ProtonGGData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C2ProtonGGData.txt")
 end
@@ -210,7 +210,7 @@ end
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
-sourcereps = binnedmeans[:,10]
+sourcereps = binnedmeans[:,Index]
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
 model(t,p) = p[1]*exp.(-p[2]*t)
