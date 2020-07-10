@@ -19,6 +19,10 @@ if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C3VectorChargeData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C3VectorChargeData.txt")
 end
 
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\gVRatioData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\gVRatioData.txt")
+end
+
 # Defining a function to go from scientific notation to floats
 function value(str)
     parse(Float64,str)
@@ -221,6 +225,16 @@ end
 for i in range(1,length(binnedmeans[:,1]),step=1)
     binnedmeans[i,:] = binnedmeans[i,:]/(abs(sourcedata[i])*3.2)
 end
+
+# saving gA replicates from plateau to file for gA/gV plot
+gAratio = binnedmeans[:,2:9]
+global dataoutfile = open("gVRatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
+gAratiostring = ""
+for i in range(1,length(gAratio[1,:]),step=1)
+    global gAratiostring = string(gAratiostring,binnedmeans[:,i],"\n")
+end
+write(dataoutfile,gAratiostring)
+close(dataoutfile)
 
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
