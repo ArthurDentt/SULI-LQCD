@@ -227,7 +227,7 @@ gVratio = binnedmeans[:,2:9]
 global dataoutfile = open("gVRatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 gVratiostring = ""
 for i in range(1,length(gVratio[1,:]),step=1)
-    global gVratiostring = string(gVratiostring,binnedmeans[:,i],"\n")
+    global gVratiostring = string(gVratiostring,gVratio[:,i],"\n")
 end
 write(dataoutfile,gVratiostring)
 close(dataoutfile)

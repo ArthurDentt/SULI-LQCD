@@ -227,7 +227,7 @@ gAratio = binnedmeans[:,2:9]
 global dataoutfile = open("gARatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 gAratiostring = ""
 for i in range(1,length(gAratio[1,:]),step=1)
-    global gAratiostring = string(gAratiostring,binnedmeans[:,i],"\n")
+    global gAratiostring = string(gAratiostring,gAratio[:,i],"\n")
 end
 write(dataoutfile,gAratiostring)
 close(dataoutfile)
