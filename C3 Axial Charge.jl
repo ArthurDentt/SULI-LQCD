@@ -221,6 +221,11 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
 end
 
+# This renormalizes by sourcedata
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    binnedmeans[i,:] = binnedmeans[i,:]/(abs(sourcedata[i])*3.2)
+end
+
 # saving gA replicates from plateau to file for gA/gV plot
 gAratio = binnedmeans[:,2:9]
 global dataoutfile = open("gARatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
@@ -230,11 +235,6 @@ for i in range(1,length(gAratio[1,:]),step=1)
 end
 write(dataoutfile,gAratiostring)
 close(dataoutfile)
-
-# This renormalizes by sourcedata
-for i in range(1,length(binnedmeans[:,1]),step=1)
-    binnedmeans[i,:] = binnedmeans[i,:]/(abs(sourcedata[i])*3.2)
-end
 
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
