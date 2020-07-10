@@ -14,7 +14,7 @@ function JackSE(JackrepVector)
     return(SE)
 end
 
-Scale = sqrt(1)
+Scale = 1
 
 println("Starting output...")
 
