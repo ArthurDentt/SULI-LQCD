@@ -227,6 +227,7 @@ for i in range(1,length(binnedmeans[:,1]),step=1)
 end
 
 # saving gA replicates from plateau to file for gA/gV plot
+cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 gVratio = binnedmeans[:,2:9]
 global dataoutfile = open("gVRatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 gVratiostring = ""
