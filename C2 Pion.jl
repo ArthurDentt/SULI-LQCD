@@ -261,5 +261,5 @@ global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 e
 write(dataoutfile,string(finalvals,"\n", stderrors,
     "\n", Effmass, "\n", EffmassSE,
     "\n", EffectiveMass, "\n", EffectiveMassSE,
-     "\n", "χ²=$chisq", "\n", "Covariance matrix: $covar", "\n"))
+    "\n", "χ²=$chisq", "\n", "Covariance matrix: ", covar, "\n"))
 close(dataoutfile)
