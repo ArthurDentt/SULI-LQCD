@@ -250,8 +250,7 @@ end
 # Finding χ² of our fit
 chisq = 0
 for i in plateau
-    global chisq += (((finalvals[i]+finalvals[64-i+1])/2 - Fitfunction(i))^2)/(((stderrors[i]+stderrors[64-i+1])/2)^2)
-    println(chisq)
+    global chisq +=  (((finalvals[i]+finalvals[64-i+1])/2 - Fitfunction(i))^2)/(((stderrors[i]+stderrors[64-i+1])/2)^2)
 end
 covar = estimate_covar(fit)
 chisq = chisq / 2
