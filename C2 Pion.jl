@@ -212,8 +212,6 @@ plateau = 5:10
 endplateau = 55:60
 model(t,p) = p[1]*exp.(-p[2]*t)
 for i in range(1,length(binnedmeans[:,1]),step=1) # folding data vvvv
-    println(binnedmeans[i,plateau])
-    println(reverse(binnedmeans[i,endplateau]))
     global fit = curve_fit(model,plateau,(binnedmeans[i,plateau]+reverse(binnedmeans[i,endplateau]))/2,[1,.1])
     fitmassreps[:,i] = fit.param
 end
