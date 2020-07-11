@@ -37,8 +37,8 @@ for i in range(1,length(Ratio[:,1]),step=1)
         Ratio[i,j] = parse(Float64,gA[i][j])/parse(Float64,gV[i][j])
     end
 end
-RatioEstimates = [mean(Ratio[:,i]) for i in range(1,length(Ratio[1,:]),step=1)]
-RatioSE = [JackSE(Ratio[:,i]) for i in range(1,length(Ratio[1,:]),step=1)]
+RatioEstimates = [mean(Ratio[i,:]) for i in range(1,length(Ratio[:,1]),step=1)]
+RatioSE = [JackSE(Ratio[i,:]) for i in range(1,length(Ratio[:,1]),step=1)]
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
