@@ -209,9 +209,12 @@ end
 
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 5:10
+endplateau = 55:60
 model(t,p) = p[1]*exp.(-p[2]*t)
-for i in range(1,length(binnedmeans[:,1]),step=1)
-    fit = curve_fit(model,plateau,binnedmeans[i,plateau],[1,.1])
+for i in range(1,length(binnedmeans[:,1]),step=1) # folding data vvvv
+    println(binnedmeans[i,plateau])
+    println(reverse(binnedmeans[i,endplateau]))
+    global fit = curve_fit(model,plateau,(binnedmeans[i,plateau]+reverse(binnedmeans[i,endplateau]))/2,[1,.1])
     fitmassreps[:,i] = fit.param
 end
 
@@ -251,10 +254,14 @@ chisq = 0
 for i in plateau
     global chisq += ((finalvals[i] - Fitfunction(i))^2)/(stderrors[i]^2)
 end
+covar = estimate_covar(fit)
 chisq = chisq / 2
 println("χ²/dof = $chisq")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", "χ²=$chisq", "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors,
+    "\n", Effmass, "\n", EffmassSE,
+    "\n", EffectiveMass, "\n", EffectiveMassSE,
+     "\n", "χ²=$chisq", "\n", "Covariance matrix: $covar", "\n"))
 close(dataoutfile)
