@@ -211,11 +211,13 @@ fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 5:10
 endplateau = 55:60
 model(t,p) = p[1]*exp.(-p[2]*t)
+covar = zeros((2,2))
 for i in range(1,length(binnedmeans[:,1]),step=1) # folding data vvvv
     global fit = curve_fit(model,plateau,(binnedmeans[i,plateau]+reverse(binnedmeans[i,endplateau]))/2,[1,.1])
+    global covar += estimate_covar(fit)
     fitmassreps[:,i] = fit.param
 end
-
+covar = covar / length(binnedmeans[:,1])
 EffectiveMass = mean(fitmassreps[2,:])
 Amplitude = mean(fitmassreps[1,:])
 EffectiveMassSE = JackSE(fitmassreps[2,:])
@@ -252,7 +254,6 @@ chisq = 0
 for i in plateau
     global chisq +=  (((finalvals[i]+finalvals[64-i+1])/2 - Fitfunction(i))^2)/(((stderrors[i]+stderrors[64-i+1])/2)^2)
 end
-covar = estimate_covar(fit)
 chisq = chisq / 2
 println("χ²/dof = $chisq")
 
