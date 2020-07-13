@@ -181,16 +181,23 @@ for i in range(1,39,step=1) # Iterate over gauge configurations
     binnedmeans[i,:] = meanvector
 end
 
-# Turn binnedmeans into binned Jack replicates, renormalizing by sourcedata
-# Then populating Jack estimators and standard errors
+# Turn binnedmeans into binned Jack replicates,
+for i in range(1,length(binnedmeans[1,:]),step=1)
+    binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
+end
+
+#  Renormalizing by sourcedata
+for i in range(1,length(binnedmeans[:,1]),step=1)
+    binnedmeans[i,:] = binnedmeans[i,:]/(abs(sourcedata[i])*3.2)
+end
+
+# Populating Jack estimators and standard errors
 stderrors = zeros(length(binnedmeans[1,:]))
 finalvals = zeros(length(binnedmeans[1,:]))
 for i in range(1,length(binnedmeans[1,:]),step=1)
-    binnedmeans[:,i] = Jackrep(binnedmeans[:,i])/(abs(sourcedata[i])*3.2)
     finalvals[i]=mean(binnedmeans[:,i])
     stderrors[i] = JackSE(binnedmeans[:,i])
 end
-
 # saving gA replicates from plateau to file for gA/gV plot
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 gAratio = binnedmeans[:,2:9]
@@ -204,5 +211,5 @@ close(dataoutfile)
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C3AxialChargeData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n"))
 close(dataoutfile)
