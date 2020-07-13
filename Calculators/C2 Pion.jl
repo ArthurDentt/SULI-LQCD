@@ -6,8 +6,8 @@ Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
 
-if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C2PionData.txt"))
-    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C2PionData.txt")
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2PionData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2PionData.txt")
 end
 
 # Defining a function to go from scientific notation to floats
@@ -230,7 +230,7 @@ end
 chisq = chisq / 2
 println("χ²/dof = $chisq")
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
 write(dataoutfile,string(finalvals,"\n", stderrors,
     "\n", Effmass, "\n", EffmassSE,
