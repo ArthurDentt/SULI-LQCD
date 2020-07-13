@@ -1,15 +1,7 @@
 # Plots C2(t), Finds effective mass
 using Plots
 using Statistics
-
-# Converts from unitless to MeV
-function massconvert(mass,massSE)
-    invspacing = 1.378
-    invspacingSE = .007
-    n_mass = mass*invspacing
-    n_massSE = sqrt( (mass*invspacingSE)^2 + (invspacing*massSE)^2 )
-    return([1000*n_mass,1000*n_massSE])
-end
+include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 println("Starting output...")
 

@@ -1,18 +1,7 @@
 # Plots C3(t), Finds effective mass
 using Plots
 using Statistics
-
-# Defining a function to find the SE of a vector of Jackknife Expectation values
-# (AKA Jackknife Replicates) Note: takes real parts of means and values input
-function JackSE(JackrepVector)
-    coefficient = ((length(JackrepVector)-1)/length(JackrepVector))
-    JackSEsum=0
-    for i in range(1,length(JackrepVector),step=1)
-        JackSEsum = JackSEsum + (real(JackrepVector[i])-real(mean(JackrepVector)))^2
-    end
-    SE = sqrt(coefficient*JackSEsum)
-    return(SE)
-end
+include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 Scale = 1
 

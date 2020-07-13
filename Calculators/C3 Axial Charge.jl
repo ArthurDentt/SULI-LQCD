@@ -1,7 +1,7 @@
 using Plots
 using Statistics
 using LsqFit
-
+include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 # This brings in C2(T) Proton as sourcedata
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global datafile=open("C2ProtonGGData.txt","r");
@@ -22,59 +22,6 @@ end
 if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\gARatioData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\gARatioData.txt")
 end
-
-# Defining a function to go from scientific notation to floats
-function value(str)
-    parse(Float64,str)
-end
-
-# Defining a function to find the SE of a vector of Jackknife Expectation values
-# (AKA Jackknife Replicates) Note: takes real parts of means and values input
-function JackSE(JackrepVector)
-    coefficient = ((length(JackrepVector)-1)/length(JackrepVector))
-    JackSEsum=0
-    for i in range(1,length(JackrepVector),step=1)
-        JackSEsum = JackSEsum + (real(JackrepVector[i])-real(mean(JackrepVector)))^2
-    end
-    SE = sqrt(coefficient*JackSEsum)
-    return(SE)
-end
-
-# Defining a function to to take a vector of data and return a vector of
-# Jackknife Replicates
-function Jackrep(datavector)
-    expectvector = []
-    for i in range(1,length(datavector),step=1)
-        expect = 0
-        for j in range(1,length(datavector),step=1)
-            if (j==i)
-                continue
-            else
-                expect = expect + datavector[j]
-            end
-        end
-        expect = expect / (length(datavector)-1)
-        push!(expectvector,expect)
-    end
-    return(expectvector)
-end
-
-# Defining a function to reshape vectors how I want for zoomed plots
-function reshapevector(vector, i)
-    newvector = zeros(length(vector))
-    for j in range(1,length(vector),step=1)
-        if ((i+j) <= length(vector))
-            newvector[j] = vector[i+j]
-        else
-            newvector[j] = vector[(i+j)%length(vector)]
-        end
-    end
-    return (newvector)
-end
-
-################################################################################
-########################### END OF FUNCTIONS ###################################
-################################################################################
 
 # For loop Iterating over the "TX" files indicating source time
 numfiles=7*16*39
