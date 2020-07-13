@@ -16,7 +16,7 @@ plotrange = 2:9
 xtickvals = [i for i in range(0,9,step=1)]
 ytickvals = [1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2]
 ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
-ytick0 = ["" for i in range(1,length(xtickvals),step=1)]
+xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
 println("Starting output...")
 
@@ -64,9 +64,6 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     yticks=(ytickvals,ytick0))
 
 savefig("Axial Charge C3 Plot.png")
-
 println("------------------------------------------------------")
-println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (This has no meaning right now)")
-
 close(datafile)
 println("Done")
