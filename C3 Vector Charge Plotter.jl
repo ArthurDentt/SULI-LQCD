@@ -2,15 +2,6 @@
 using Plots
 using Statistics
 
-# Converts from unitless to MeV
-function massconvert(mass,massSE)
-    invspacing = 1.378
-    invspacingSE = .007
-    n_mass = mass*invspacing
-    n_massSE = sqrt( (mass*invspacingSE)^2 + (invspacing*massSE)^2 )
-    return([1000*n_mass,1000*n_massSE])
-end
-
 Scale = sqrt(2)
 plotrange = 2:9
 
@@ -26,9 +17,7 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global datafile=open("C3VectorChargeData.txt","r");
 datamatrix=readlines(datafile)
 close(datafile)
-EffectiveMass = parse(Float64,datamatrix[5])
-EffectiveMassSE = parse(Float64,datamatrix[6])
-datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
+datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,2,step=1)]
 
 # Take incoming data and reformat it into a matrix where each row is a datavector
 # rows: Data 1, Error 1, Data 2, Error 2, ... etc.
@@ -50,10 +39,6 @@ for i in range(1,length(n_datamatrix[1,:]),step=1)
     end
 end
 
-Effmass = n_datamatrix[3,:]
-EffmassSE = n_datamatrix[4,:]
-
-EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 scatter(1:length(plotrange),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
@@ -66,9 +51,6 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     yticks=(ytickvals,ytick0))
 
 savefig("Vector Charge C3 Plot.png")
-
 println("------------------------------------------------------")
-println("Effective mass: $EffectiveMass ⁺/₋ $EffectiveMassSE MeV (This has no meaning right now)")
-
 close(datafile)
 println("Done")
