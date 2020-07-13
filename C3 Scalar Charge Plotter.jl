@@ -16,7 +16,7 @@ plotrange = 1:9
 xtickvals = [i for i in range(0,9,step=1)]
 ytickvals = [(0 +.5*i) for i in range(0,4,step=1)]
 ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
-ytick0 = ["" for i in range(1,length(xtickvals),step=1)]
+xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
 println("Starting output...")
 
