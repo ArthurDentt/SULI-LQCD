@@ -183,9 +183,11 @@ for i in range(1,39,step=1) # Iterate over gauge configurations
     binnedmeans[i,:] = meanvector
 end
 
-# Turn binnedmeans into binned Jack replicates
+# Turn binnedmeans into binned Jack replicates, Populating final Jack estimators and errors
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
+    stderrors = zeros(length(binnedmeans[1,:]))
+    finalvals = zeros(length(binnedmeans[1,:]))
 end
 
 # Fitting data to find m*
@@ -206,18 +208,8 @@ EffectiveMassSE = JackSE(fitmassreps[2,:])
 
 Fitfunction(t) = Amplitude*ℯ^(-EffectiveMass*t)
 
-# Populating final Jack estimators and errors
-stderrors = zeros(length(binnedmeans[1,:]))
-finalvals = zeros(length(binnedmeans[1,:]))
-
-for i in range(1,length(binnedmeans[1,:]),step=1)
-    stderrors[i] = JackSE(binnedmeans[:,i])
-    finalvals[i]=mean(binnedmeans[:,i])
-end
-
 # Populating Jack replicates of effective mass
 Effmassrep=zeros((39,length(alldata[1,:])))
-
 for i in range(1,length(binnedmeans[:,1]),step=1)
     Effmassrep[i,:]=Emass(binnedmeans[i,:])
 end
