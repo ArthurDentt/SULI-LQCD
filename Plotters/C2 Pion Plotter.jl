@@ -13,7 +13,7 @@ end
 
 println("Starting output...")
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 
 global datafile=open("C2PionData.txt","r");
 datamatrix=readlines(datafile)

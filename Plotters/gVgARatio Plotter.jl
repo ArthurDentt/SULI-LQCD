@@ -18,7 +18,7 @@ Scale = 1
 
 println("Starting output...")
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 
 #get gₐ,gᵥ data from files
 global datafile=open("gARatioData.txt","r");

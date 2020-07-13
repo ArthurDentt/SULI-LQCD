@@ -12,7 +12,7 @@ xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
 println("Starting output...")
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 
 global datafile=open("C3VectorChargeData.txt","r");
 datamatrix=readlines(datafile)
