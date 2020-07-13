@@ -2,7 +2,7 @@ using Plots
 using Statistics
 using LsqFit
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global datafile=open("C2ProtonGGData.txt","r");
 sourcedata=readlines(datafile)
 close(datafile)
@@ -14,8 +14,8 @@ Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
 
-if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C3ScalarChargeData.txt"))
-    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C3ScalarChargeData.txt")
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C3ScalarChargeData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C3ScalarChargeData.txt")
 end
 
 # Defining a function to go from scientific notation to floats
@@ -194,7 +194,7 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
     stderrors[i] = JackSE(binnedmeans[:,i])
 end
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global dataoutfile = open("C3ScalarChargeData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 write(dataoutfile,string(finalvals,"\n", stderrors, "\n"))
 close(dataoutfile)

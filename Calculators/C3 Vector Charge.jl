@@ -3,7 +3,7 @@ using Statistics
 using LsqFit
 
 # This brings in C2(T) Proton as sourcedata
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global datafile=open("C2ProtonGGData.txt","r");
 sourcedata=readlines(datafile)
 close(datafile)
@@ -15,12 +15,12 @@ Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
 
-if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\C3VectorChargeData.txt"))
-    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\C3VectorChargeData.txt")
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C3VectorChargeData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C3VectorChargeData.txt")
 end
 
-if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\gVRatioData.txt"))
-    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\gVRatioData.txt")
+if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\gVRatioData.txt"))
+    rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\gVRatioData.txt")
 end
 
 # Defining a function to go from scientific notation to floats
@@ -235,7 +235,7 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
 end
 
 # saving gA replicates from plateau to file for gA/gV plot
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 gVratio = binnedmeans[:,2:9]
 global dataoutfile = open("gVRatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 gVratiostring = ""
@@ -245,7 +245,7 @@ end
 write(dataoutfile,gVratiostring)
 close(dataoutfile)
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD")
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global dataoutfile = open("C3VectorChargeData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
 write(dataoutfile,string(finalvals,"\n", stderrors, "\n"))
 close(dataoutfile)
