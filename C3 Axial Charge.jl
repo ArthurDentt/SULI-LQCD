@@ -198,6 +198,7 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
     finalvals[i]=mean(binnedmeans[:,i])
     stderrors[i] = JackSE(binnedmeans[:,i])
 end
+
 # saving gA replicates from plateau to file for gA/gV plot
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 gAratio = binnedmeans[:,2:9]
