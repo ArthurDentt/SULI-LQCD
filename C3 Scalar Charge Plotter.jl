@@ -17,7 +17,7 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global datafile=open("C3ScalarChargeData.txt","r");
 datamatrix=readlines(datafile)
 close(datafile)
-datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
+datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,2,step=1)]
 
 # Take incoming data and reformat it into a matrix where each row is a datavector
 # rows: Data 1, Error 1, Data 2, Error 2, ... etc.
