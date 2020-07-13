@@ -206,10 +206,16 @@ for i in range(1,39,step=1) # Iterate over gauge configurations
     binnedmeans[i,:] = meanvector
 end
 
-# Turn binnedmeans into binned Jack replicates
+# Turn binnedmeans into binned Jack replicates, Populating final Jack estimators and errors
+stderrors = zeros(length(binnedmeans[1,:]))
+finalvals = zeros(length(binnedmeans[1,:]))
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
+    finalvals[i]=mean(binnedmeans[:,i])
+    stderrors[i] = JackSE(binnedmeans[:,i])
 end
+
+# Fitting data to find m*
 sourcereps = binnedmeans[:,Index]
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 7:11
@@ -223,33 +229,31 @@ Amplitude = mean(fitmassreps[1,:])
 EffectiveMassSE = JackSE(fitmassreps[2,:])
 
 Fitfunction(t) = Amplitude*ℯ^(-EffectiveMass*t)
-stderrors = zeros(length(binnedmeans[1,:]))
 
-for i in range(1,length(binnedmeans[1,:]),step=1)
-    stderrors[i] = JackSE(binnedmeans[:,i])
-end
-
-finalvals = zeros(length(binnedmeans[1,:]))
-for i in range(1,length(binnedmeans[1,:]),step=1)
-    finalvals[i]=mean(binnedmeans[:,i])
-end
-
+# Populating Jack replicates of effective mass
 Effmassrep=zeros((39,length(alldata[1,:])))
-
 for i in range(1,length(binnedmeans[:,1]),step=1)
     Effmassrep[i,:]=Emass(binnedmeans[i,:])
 end
 
+# Populating effective mass and error for m* plot
 Effmass = zeros(length(Effmassrep[1,:]))
 EffmassSE = zeros(length(Effmassrep[1,:]))
-
 for i in range(1,length(Effmassrep[1,:]),step=1)
     Effmass[i]=mean(Effmassrep[:,i])
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
 
+# Finding χ² of our fit
+chisq = 0
+for i in plateau
+    global chisq += ((finalvals[i] - Fitfunction(i))^2)/(stderrors[i]^2)
+end
+chisq = chisq / 2
+println("χ²/dof = $chisq")
+
 cd("C:\\Users\\Drew\\github\\SULI-LQCD")
 global dataoutfile = open("C2ProtonGGData.txt","a")
 #saving data to file -> C2, C2 error, m*, m* error,M*E , M*SE E, C2(T) replicates, χ²
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", sourcereps, "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", Effmass, "\n", EffmassSE, "\n", EffectiveMass, "\n", EffectiveMassSE, "\n", sourcereps, "\n", "χ²=$chisq", "\n"))
 close(dataoutfile)
