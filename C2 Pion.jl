@@ -217,7 +217,6 @@ end
 # Populating effective mass and error for m* plot
 Effmass = zeros(length(Effmassrep[1,:]))
 EffmassSE = zeros(length(Effmassrep[1,:]))
-
 for i in range(1,length(Effmassrep[1,:]),step=1)
     Effmass[i]=mean(Effmassrep[:,i])
     EffmassSE[i] = JackSE(Effmassrep[:,i])
