@@ -6,7 +6,7 @@ Scale = sqrt(2)
 plotrange = 2:9
 
 xtickvals = [i for i in range(0,9,step=1)]
-ytickvals = [1.4,1.5,1.6,1.7,1.8,1.9,2,2.1,2.2]
+ytickvals = [(1.4+i*.1) for i in range(0,8,step=1)]
 ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
 xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
