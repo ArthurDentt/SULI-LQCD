@@ -67,41 +67,6 @@ function reshapevector(vector, i)
     return (newvector)
 end
 
-# Defining a function to create m* vectors from C2 vectors, deletes outliers
-function Emass(C2vector)
-    Emassvector = []
-    Emass = 0
-    for j in range(1,length(C2vector),step=1)
-        if (j==length(C2vector))
-            Emass = C2vector[j]/C2vector[1]
-        else
-            Emass = C2vector[j]/C2vector[j+1]
-        end
-        push!(Emassvector,Emass)
-    end
-    Emassvector=real(log.(Complex.(Emassvector)))
-    return(Emassvector)
-end
-
-function EmassSE(C2vector,C2SEvector)
-    EmassSEvector = []
-    EmassSE = 0
-    for i in range(1,length(C2vector),step=1)
-        if (i==length(C2vector))
-            a = (C2SEvector[i]/(C2vector[1]))
-            b = (C2vector[i]*C2SEvector[1]/(C2vector[1]^2))
-            EmassSE = sqrt(a^2 + b^2)*C2vector[1]/C2vector[i]
-        else
-            a = (C2SEvector[i]/(C2vector[i+1]))
-            b = (C2vector[i]*C2SEvector[i+1]/(C2vector[i+1]^2))
-            EmassSE = sqrt(a^2 + b^2)*C2vector[i+1]/C2vector[i]
-        end
-        push!(EmassSEvector,EmassSE)
-    end
-    EmassSEvector=real(log.(Complex.(EmassSEvector)))
-    return(EmassSEvector)
-end
-
 ################################################################################
 ########################### END OF FUNCTIONS ###################################
 ################################################################################
