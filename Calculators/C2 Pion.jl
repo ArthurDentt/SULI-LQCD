@@ -157,7 +157,6 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
 end
 covariancemat = cov(foldbins[:,plateau],dims=1)
 icov = inv(covariancemat)
-println(covariancemat*icov)
 foldfinalvals = (finalvals + reverse(finalvals))/2
 # Finding χ² of our fit
 chisq = 0
@@ -176,5 +175,5 @@ global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 e
 write(dataoutfile,string(finalvals,"\n", stderrors,
     "\n", Effmass, "\n", EffmassSE,
     "\n", EffectiveMass, "\n", EffectiveMassSE,
-    "\n", "χ²=$chisq", "\n", "Covariance matrix: ", covar, "\n"))
+    "\n", "χ²=$chisq", "\n"))
 close(dataoutfile)
