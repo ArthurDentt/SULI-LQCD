@@ -155,7 +155,7 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     Effmass[i]=mean(Effmassrep[:,i])
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
-covariancemat = cov(foldbins[:,plateau],dims=1)
+covariancemat = mcovar(foldbins[:,plateau])
 icov = inv(covariancemat)
 foldfinalvals = (finalvals + reverse(finalvals))/2
 # Finding χ² of our fit
