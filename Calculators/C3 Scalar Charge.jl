@@ -3,6 +3,9 @@ using Statistics
 using LsqFit
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
+Zsv = .877
+ZsvSE = .001
+
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global datafile=open("C2ProtonGGData.txt","r");
 sourcedata=readlines(datafile)
@@ -134,6 +137,24 @@ for i in range(1,length(binnedmeans[:,1]),step=1)
     binnedmeans[i,:] = binnedmeans[i,:]/(abs(sourcedata[i])*3.2)
 end
 
+cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
+global datafile=open("gVRatioData.txt","r");
+gV=readlines(datafile)
+close(datafile)
+gV = [split(split(split(gV[i],"[")[2],"]")[1], ",") for i in range(1,8,step=1)]
+
+Ratio = zeros((length(gV[1]),length(gV)))
+for i in range(1,length(Ratio[1,:]),step=1) # 1-8 tau
+    for j in range(1,length(Ratio[:,1]),step=1) # 1-39 bins
+        Ratio[j,i] = binnedmeans[j,i+1]/parse(Float64,gV[i][j])
+    end
+end
+renormgs = [mean(Ratio[:,i]) for i in range(1,length(Ratio[1,:]),step=1)] # These are jack estimators
+renormgsSE = [JackSE(Ratio[:,i]) for i in range(1,length(Ratio[1,:]),step=1)] # These are jack errors
+
+physvalsSE = [sqrt( (renormgs[i]*ZsvSE)^2 + (Zsv*renormgsSE[i])^2 ) for i in range(1,length(renormgs),step=1)]
+physvals = [Zsv * renormgs[i] for i in range(1,length(renormgs),step=1)]
+
 # Populating Jack estimators and standard errors
 stderrors = zeros(length(binnedmeans[1,:]))
 finalvals = zeros(length(binnedmeans[1,:]))
@@ -143,6 +164,6 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
 end
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
-global dataoutfile = open("C3ScalarChargeData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n"))
+global dataoutfile = open("C3ScalarChargeData.txt","a") #saving data to file -> C2, C2 error, phys, phys error
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", physvals, "\n", physvalsSE, "\n"))
 close(dataoutfile)
