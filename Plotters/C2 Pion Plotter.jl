@@ -6,7 +6,7 @@ include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
-
+plotrangem = 1:64
 global datafile=open("C2PionData.txt","r");
 datamatrix=readlines(datafile)
 EffectiveMass = parse(Float64,datamatrix[5])
@@ -37,7 +37,7 @@ plot(1:length(C2),C2,markerstrokecolor=(:black),marker=(:x),yerror=C2SE,legend=f
 xlabel!("t");ylabel!("Re(<C₂>)");title!("Pion Re(<C₂>)(t)")
 savefig("Pion C2 Plot.png")
 
-plot(1:length(Effmass),Effmass,markerstrokecolor=(:black),marker=(:x),legend=false,dpi=600,yerror=EffmassSE,grid=false)
+plot(1:length(Effmass[plotrangem]),Effmass[plotrangem],markerstrokecolor=(:black),marker=(:x),legend=false,dpi=600,yerror=EffmassSE[plotrangem],grid=false)
 xlabel!("t");ylabel!("m*");title!("Pion m*(t)")
 savefig("Pion Emass Plot.png")
 
