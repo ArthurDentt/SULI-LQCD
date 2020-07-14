@@ -116,20 +116,22 @@ for i in range(1,39,step=1) # Iterate over gauge configurations
 end
 
 # Turn binnedmeans into binned Jack replicates, Populating final Jack estimators and errors
+stderrors = zeros(length(binnedmeans[1,:]))
+finalvals = zeros(length(binnedmeans[1,:]))
 for i in range(1,length(binnedmeans[1,:]),step=1)
     binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
-    stderrors = zeros(length(binnedmeans[1,:]))
-    finalvals = zeros(length(binnedmeans[1,:]))
+    finalvals[i]=mean(binnedmeans[:,i])
+    stderrors[i] = JackSE(binnedmeans[:,i])
 end
 
 # Fitting data to find m*
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
 plateau = 5:10
-endplateau = 55:60
 model(t,p) = p[1]*exp.(-p[2]*t)
 covar = zeros((2,2))
+foldbins = (binnedmeans[:,:]+reverse(binnedmeans[:,:],dims=2))/2
 for i in range(1,length(binnedmeans[:,1]),step=1) # folding data vvvv
-    global fit = curve_fit(model,plateau,(binnedmeans[i,plateau]+reverse(binnedmeans[i,endplateau]))/2,[1,.1])
+    global fit = curve_fit(model,plateau,foldbins[i,plateau],[1,.1])
     global covar += estimate_covar(fit)
     fitmassreps[:,i] = fit.param
 end
@@ -153,11 +155,18 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     Effmass[i]=mean(Effmassrep[:,i])
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
-
+covariancemat = cov(foldbins[:,plateau],dims=1)
+icov = inv(covariancemat)
+println(covariancemat*icov)
+foldfinalvals = (finalvals + reverse(finalvals))/2
 # Finding χ² of our fit
 chisq = 0
-for i in plateau
-    global chisq +=  (((finalvals[i]+finalvals[64-i+1])/2 - Fitfunction(i))^2)/(((stderrors[i]+stderrors[64-i+1])/2)^2)
+for i in range(1,length(plateau),step=1)
+    for j in range(1,length(plateau),step=1)
+        global chisq += (( (foldfinalvals[plateau[i]] - Fitfunction(plateau[i])) )*
+            icov[i,j]* ( (foldfinalvals[plateau[j]] - Fitfunction(plateau[j])) ))
+        println(chisq)
+    end
 end
 chisq = chisq / 2
 println("χ²/dof = $chisq")
