@@ -157,10 +157,17 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
 
+covariancemat = mcovar(binnedmeans[:,plateau])
+icov = inv(covariancemat)
+
 # Finding χ² of our fit
 chisq = 0
-for i in plateau
-    global chisq += ((finalvals[i] - Fitfunction(i))^2)/(stderrors[i]^2)
+for i in range(1,length(plateau),step=1)
+    for j in range(1,length(plateau),step=1)
+        global chisq += (( (finalvals[plateau[i]] - Fitfunction(plateau[i])) )*
+            icov[i,j]* ( (finalvals[plateau[j]] - Fitfunction(plateau[j])) ))
+        println(chisq)
+    end
 end
 chisq = chisq / 2
 println("χ²/dof = $chisq")
