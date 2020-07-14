@@ -164,7 +164,6 @@ for i in range(1,length(plateau),step=1)
     for j in range(1,length(plateau),step=1)
         global chisq += (( (foldfinalvals[plateau[i]] - Fitfunction(plateau[i])) )*
             icov[i,j]* ( (foldfinalvals[plateau[j]] - Fitfunction(plateau[j])) ))
-        println(chisq)
     end
 end
 chisq = chisq / 2
