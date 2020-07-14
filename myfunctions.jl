@@ -1,3 +1,4 @@
+using Statistics
 # Parses scientific value strings as floats
 function value(str)
     parse(Float64,str)
@@ -61,6 +62,7 @@ function Emass(C2vector)
     Emassvector=real(log.(Complex.(Emassvector)))
     return(Emassvector)
 end
+
 # Converts lattice unit masses to MeV
 function massconvert(mass,massSE)
     invspacing = 1.378
@@ -68,4 +70,22 @@ function massconvert(mass,massSE)
     n_mass = mass*invspacing
     n_massSE = sqrt( (mass*invspacingSE)^2 + (invspacing*massSE)^2 )
     return([1000*n_mass,1000*n_massSE])
+end
+
+function vcovar(v1,v2)
+    sum = 0
+    for i in range(1,length(v1),step=1)
+        sum += (v1[i]-mean(v1))*(v2[i]-mean(v2))/length(v1)
+    end
+    return(sum)
+end
+
+function mcovar(M)
+    Mn = zeros(size(M))
+    for i in range(1,length(M[:,1]),step=1) # iterate over rows
+        for j in range(1,length(M[1,:]),step=1) # iterate over columns
+            Mn[i,j] = vcovar(M[:,i],M[:,j]) # covariance of columns i,j
+        end
+    end
+    return(Mn)
 end
