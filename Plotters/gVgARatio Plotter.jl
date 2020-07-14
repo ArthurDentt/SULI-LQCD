@@ -33,7 +33,7 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=RatioSE,
     legend=false,dpi=600,grid=false,frame=(:box))
-xlabel!("τ");ylabel!("gₐ/gᵥ");title!("Axial / Vector Charge Ratio")
+xlabel!("τ");ylabel!("gₐ/gᵥ");title!("Physical Axial Charge")
 
 savefig("Physical Axial Charge Plot.png")
 println("Done")
