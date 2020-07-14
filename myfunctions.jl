@@ -75,15 +75,15 @@ end
 function vcovar(v1,v2)
     sum = 0
     for i in range(1,length(v1),step=1)
-        sum += (v1[i]-mean(v1))*(v2[i]-mean(v2))/length(v1)
+        sum += (v1[i]-mean(v1))*(v2[i]-mean(v2))/(length(v1)-1)
     end
     return(sum)
 end
 
 function mcovar(M)
-    Mn = zeros(size(M))
-    for i in range(1,length(M[:,1]),step=1) # iterate over rows
-        for j in range(1,length(M[1,:]),step=1) # iterate over columns
+    Mn = zeros((length(M[1,:]),length(M[1,:])))
+    for i in range(1,length(M[1,:]),step=1) # iterate over columns
+        for j in range(1,length(M[1,:]),step=1) # iterate over columns again
             Mn[i,j] = vcovar(M[:,i],M[:,j]) # covariance of columns i,j
         end
     end
