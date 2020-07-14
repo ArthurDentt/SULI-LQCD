@@ -35,5 +35,5 @@ scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
     legend=false,dpi=600,grid=false,frame=(:box))
 xlabel!("τ");ylabel!("gₐ/gᵥ");title!("Axial / Vector Charge Ratio")
 
-savefig("Axial Vector Charge Plot.png")
+savefig("Physical Axial Charge Plot.png")
 println("Done")
