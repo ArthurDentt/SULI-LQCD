@@ -38,8 +38,8 @@ scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=RatioSE,
     framealpha=0,dpi=600,grid=false,frame=(:box),ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals),
-    yticks=(ytickvals), foreground_color_legend = nothing, label = "gₐ/gᵥ 169.4(13) MeV",
-    legend = (:topright))
+    yticks=(ytickvals), foreground_color_legend = nothing, label = "170 MeV AMA",
+    legend = ((.85,.95)), legendfontsize = 7)
 xlabel!("τ");ylabel!("gₐ/gᵥ");title!("Physical Axial Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
