@@ -4,6 +4,10 @@ using Statistics
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 Scale = 1
+xtickvals = [i for i in range(0,9,step=1)]
+ytickvals = [(1+.05*i) for i in range(0,8,step=1)]
+ytick0 = ["" for i in ytickvals]
+xtick0 = ["" for i in xtickvals]
 
 println("Starting output...")
 
@@ -32,8 +36,17 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=RatioSE,
-    legend=false,dpi=600,grid=false,frame=(:box))
+    framealpha=0,dpi=600,grid=false,frame=(:box),ylims=(ytickvals[1],ytickvals[end]),
+    xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals),
+    yticks=(ytickvals), foreground_color_legend = nothing, label = "gₐ/gᵥ 169.4(13) MeV",
+    legend = (:topright))
 xlabel!("τ");ylabel!("gₐ/gᵥ");title!("Physical Axial Charge")
+plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
+    xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
+    yticks=(ytickvals,ytick0))
+hline!(([1.2755]),linecolor=(:blue),label="")
+annotate!(0.05, 1.285, text("Experiment: 1.2732(23)",6, :left))
+hline!(([1.2709]),linecolor=(:blue),label="")
 
 savefig("Physical Axial Charge Plot.png")
 println("Done")
