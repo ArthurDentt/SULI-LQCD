@@ -155,18 +155,17 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     Effmass[i]=mean(Effmassrep[:,i])
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
-covariancemat = mcovar(foldbins[:,plateau])
+covariancemat = cov(foldbins[:,plateau])
 icov = inv(covariancemat)
 foldfinalvals = (finalvals + reverse(finalvals))/2
 # Finding χ² of our fit
 chisq = 0
 for i in range(1,length(plateau),step=1)
     for j in range(1,length(plateau),step=1)
-        global chisq += (( (foldfinalvals[plateau[i]] - Fitfunction(plateau[i])) )*
-            icov[i,j]* ( (foldfinalvals[plateau[j]] - Fitfunction(plateau[j])) ))
+        global chisq += (( (-foldfinalvals[plateau[i]] + Fitfunction(plateau[i])) )*
+            icov[i,j]*( (-foldfinalvals[plateau[j]] + Fitfunction(plateau[j])) )) / (length(plateau)-2)
     end
 end
-chisq = chisq / 2
 println("χ²/dof = $chisq")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
