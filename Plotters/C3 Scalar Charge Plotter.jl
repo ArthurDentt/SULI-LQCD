@@ -49,8 +49,10 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 scatter(0:length(plotrange)-1,C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
-    legend=false,dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
-    ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box))
+    dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
+    ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box),
+    foreground_color_legend = nothing, label = "170 MeV AMA",
+    legend = ((.85,.95)), legendfontsize = 7)
 xlabel!("τ");ylabel!("gₛ");title!("Scalar Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
@@ -59,8 +61,10 @@ savefig("Scalar Charge C3 Plot.png")
 
 scatter(1:8,physgs*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=physgsSE*Scale,
-    legend=false,dpi=600,grid=false,xlims=(xtickvals2[1],xtickvals2[end]),
-    ylims=(ytickvals2[1],ytickvals2[end]),xticks=xtickvals2,yticks=ytickvals2,frame=(:box))
+    dpi=600,grid=false,xlims=(xtickvals2[1],xtickvals2[end]),
+    ylims=(ytickvals2[1],ytickvals2[end]),xticks=xtickvals2,yticks=ytickvals2,frame=(:box),
+    foreground_color_legend = nothing, label = "170 MeV AMA",
+    legend = ((.85,.95)), legendfontsize = 7)
 xlabel!("τ");ylabel!("gₛZₛ");title!("Physical Scalar Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals2[1],ytickvals2[end]),
     xlims=(xtickvals2[1],xtickvals2[end]),xticks = (xtickvals2,xtick02),
