@@ -10,6 +10,11 @@ ytickvals = [(0 +.5*i) for i in range(0,4,step=1)]
 ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
 xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
+xtickvals2 = [i for i in range(0,9,step=1)]
+ytickvals2 = [(0.6 +.2*i) for i in range(0,6,step=1)]
+ytick02 = ["" for i in range(1,length(ytickvals2),step=1)]
+xtick02 = ["" for i in range(1,length(xtickvals),step=1)]
+
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
@@ -54,10 +59,14 @@ savefig("Scalar Charge C3 Plot.png")
 
 scatter(1:8,physgs*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=physgsSE*Scale,
-    legend=false,dpi=600,grid=false,frame=(:box), ylims = (.6,2))
+    legend=false,dpi=600,grid=false,xlims=(xtickvals2[1],xtickvals2[end]),
+    ylims=(ytickvals2[1],ytickvals2[end]),xticks=xtickvals2,yticks=ytickvals2,frame=(:box))
 xlabel!("τ");ylabel!("gₛZₛ");title!("Physical Scalar Charge")
-
+plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals2[1],ytickvals2[end]),
+    xlims=(xtickvals2[1],xtickvals2[end]),xticks = (xtickvals2,xtick02),
+    yticks=(ytickvals2,ytick02))
 savefig("Physical Scalar Charge Plot.png")
+
 println("------------------------------------------------------")
 close(datafile)
 println("Done")
