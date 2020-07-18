@@ -146,6 +146,16 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
     stderrors[i] = JackSE(binnedmeans[:,i])
 end
 
+plateau = 2:9
+Charges = [mean(binnedmeans[:,i]) for i in plateau] # Jack replicates of charge
+Charge = mean(Charges) #Jack estimator of Charge
+ChargeSE = JackSE(Charges)
+chisq = 0
+for i in range(1,length(plateau),step=1)
+    global chisq += ((Charge-finalvals[plateau[i]]))^2  / (stderrors[plateau[i]]) / (length(plateau)-1)
+end
+println("χ²/dof = $chisq")
+
 # saving gA replicates from plateau to file for gA/gV plot
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 gVratio = binnedmeans[:,2:9]
@@ -159,5 +169,5 @@ close(dataoutfile)
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global dataoutfile = open("C3VectorChargeData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n"))
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", chisq, "\n", Charge, "\n", ChargeSE, "\n"))
 close(dataoutfile)
