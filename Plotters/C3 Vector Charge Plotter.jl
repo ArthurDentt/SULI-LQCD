@@ -17,6 +17,9 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global datafile=open("C3VectorChargeData.txt","r");
 datamatrix=readlines(datafile)
 close(datafile)
+chisq = value(datamatrix[3])*Scale
+Charge = value(datamatrix[4])*Scale
+ChargeSE = value(datamatrix[5])*Scale
 datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,2,step=1)]
 
 # Take incoming data and reformat it into a matrix where each row is a datavector
@@ -51,6 +54,9 @@ xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
     yticks=(ytickvals,ytick0))
+    hline!(([Charge + ChargeSE]),linecolor=(:blue),label="")
+    annotate!(0.05, Charge + ChargeSE + .007, text("Vector Charge: 1.392(13)",6, :left))
+    hline!(([Charge - ChargeSE]),linecolor=(:blue),label="")
 
 savefig("Vector Charge C3 Plot.png")
 println("------------------------------------------------------")

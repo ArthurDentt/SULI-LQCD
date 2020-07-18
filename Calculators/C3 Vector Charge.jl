@@ -146,7 +146,7 @@ for i in range(1,length(binnedmeans[1,:]),step=1)
     stderrors[i] = JackSE(binnedmeans[:,i])
 end
 
-plateau = 2:9
+plateau = 3:8
 Charges = [mean(binnedmeans[:,i]) for i in plateau] # Jack replicates of charge
 Charge = mean(Charges) #Jack estimator of Charge
 ChargeSE = JackSE(Charges)

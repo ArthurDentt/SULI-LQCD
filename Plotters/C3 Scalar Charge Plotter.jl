@@ -1,6 +1,7 @@
 # Plots C3(t), Finds effective mass
 using Plots
 using Statistics
+include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 Scale = sqrt(2)
 plotrange = 1:9
@@ -22,6 +23,9 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global datafile=open("C3ScalarChargeData.txt","r");
 datamatrix=readlines(datafile)
 close(datafile)
+chisq = value(datamatrix[5])*Scale
+Charge = value(datamatrix[6])*Scale
+ChargeSE = value(datamatrix[7])*Scale
 datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
 
 # Take incoming data and reformat it into a matrix where each row is a datavector
@@ -57,6 +61,9 @@ xlabel!("τ");ylabel!("gₛ");title!("Scalar Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
     yticks=(ytickvals,ytick0))
+    hline!(([Charge + ChargeSE]),linecolor=(:blue),label="")
+    annotate!(0.05, Charge + ChargeSE + .03, text("Scalar Charge: 1.36(18)",6, :left))
+    hline!(([Charge - ChargeSE]),linecolor=(:blue),label="")
 savefig("Scalar Charge C3 Plot.png")
 
 scatter(1:8,physgs*Scale,marker=(:x),markercolor=(:red),
