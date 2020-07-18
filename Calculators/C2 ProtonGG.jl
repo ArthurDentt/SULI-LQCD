@@ -105,6 +105,7 @@ end
 
 # Binning data
 binnedmeans=zeros((39,length(alldata[1,:])))
+binnedsavedmeans=zeros((39,length(alldata[1,:])))
 for i in range(1,39,step=1) # Iterate over gauge configurations
     binnedmatrix = zeros((7*16,64))
     for j in range(1,7*16,step=1)
@@ -117,6 +118,7 @@ for i in range(1,39,step=1) # Iterate over gauge configurations
         meanvector[j]=mean(binnedmatrix[:,j])
     end
     binnedmeans[i,:] = meanvector
+    binnedsavedmeans[i,:] = meanvector
 end
 
 # Turn binnedmeans into binned Jack replicates, Populating final Jack estimators and errors
@@ -131,7 +133,7 @@ end
 # Fitting data to find m*
 sourcereps = binnedmeans[:,Index]
 fitmassreps = zeros((2,length(binnedmeans[:,1])))
-plateau = 5:10
+plateau = 6:11
 model(t,p) = p[1]*exp.(-p[2]*t)
 for i in range(1,length(binnedmeans[:,1]),step=1)
     global fit = curve_fit(model,plateau,binnedmeans[i,plateau],[-1000000,.71])
@@ -157,7 +159,7 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
 
-covariancemat = cov(binnedmeans[:,plateau])
+covariancemat = cov(binnedsavedmeans[:,plateau])
 icov = inv(covariancemat)
 
 # Finding χ² of our fit

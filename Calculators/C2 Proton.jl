@@ -105,18 +105,19 @@ end
 
 # Binning data
 binnedmeans=zeros((39,length(alldata[1,:])))
+binnedsavedmeans=zeros((39,length(alldata[1,:])))
 for i in range(1,39,step=1) # Iterate over gauge configurations
     binnedmatrix = zeros((7*16,64))
     for j in range(1,7*16,step=1)
         index = i+39(j-1)
         binnedmatrix[j,:]=alldata[index,:]
     end
-    #Do jackknife error on binned data
     meanvector = zeros(length(binnedmatrix[1,:]))
     for j in range(1,length(binnedmatrix[1,:]),step=1)
         meanvector[j]=mean(binnedmatrix[:,j])
     end
     binnedmeans[i,:] = meanvector
+    binnedsavedmeans[i,:] = meanvector
 end
 
 # Turn binnedmeans into binned Jack replicates, Populating final Jack estimators and errors
@@ -156,7 +157,7 @@ for i in range(1,length(Effmassrep[1,:]),step=1)
     EffmassSE[i] = JackSE(Effmassrep[:,i])
 end
 
-covariancemat = cov(binnedmeans[:,plateau])
+covariancemat = cov(binnedsavedmeans[:,plateau])
 icov = inv(covariancemat)
 
 # Finding χ² of our fit
