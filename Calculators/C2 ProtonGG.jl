@@ -112,7 +112,6 @@ for i in range(1,39,step=1) # Iterate over gauge configurations
         index = i+39(j-1)
         binnedmatrix[j,:]=alldata[index,:]
     end
-    #Do jackknife error on binned data
     meanvector = zeros(length(binnedmatrix[1,:]))
     for j in range(1,length(binnedmatrix[1,:]),step=1)
         meanvector[j]=mean(binnedmatrix[:,j])
