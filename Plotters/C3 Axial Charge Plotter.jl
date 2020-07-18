@@ -45,7 +45,7 @@ scatter(1:length(plotrange),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
     dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
     ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box),
-    foreground_color_legend = nothing, label = "170 MeV AMA",
+    foreground_color_legend = nothing, background_color_legend=nothing, label = "170 MeV AMA",
     legend = ((.85,.95)), legendfontsize = 7)
 xlabel!("τ");ylabel!("gₐ");title!("Axial Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
