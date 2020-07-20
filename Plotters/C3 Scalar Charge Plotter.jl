@@ -61,9 +61,9 @@ xlabel!("τ");ylabel!("gₛ");title!("Scalar Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
     yticks=(ytickvals,ytick0))
-    hline!(([Charge + ChargeSE]),linecolor=(:blue),label="")
+    hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
     annotate!(0.05, Charge + ChargeSE + .03, text("Scalar Charge: 1.36(18)",6, :left))
-    hline!(([Charge - ChargeSE]),linecolor=(:blue),label="")
+    hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 savefig("Scalar Charge C3 Plot.png")
 
 scatter(1:8,physgs*Scale,marker=(:x),markercolor=(:red),

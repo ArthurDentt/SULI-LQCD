@@ -32,7 +32,21 @@ for i in range(1,length(Ratio[:,1]),step=1)
 end
 RatioEstimates = [mean(Ratio[i,:]) for i in range(1,length(Ratio[:,1]),step=1)]
 RatioSE = [JackSE(Ratio[i,:]) for i in range(1,length(Ratio[:,1]),step=1)]
+
+Charges = [mean(Ratio[:,i]) for i in range(1,length(Ratio[1,:]),step=1)] # Jack replicates of charge
+Charge = mean(Charges) #Jack estimator of Charge
+ChargeSE = JackSE(Charges)
+chisq = 0
+for i in range(1,length(RatioEstimates),step=1)
+    global chisq += ((Charge-RatioEstimates[i]))^2  / (RatioSE[i]) / (length(Ratio[:,1])-1)
+end
+println("χ²/dof = $chisq")
+
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
+
+# Defining the properly round charge and error for plot annotation
+fivedigCharge = round(Charge,digits=3)
+twodigChargeSE = Integer(round(ChargeSE, digits=2)*1000)
 
 scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=RatioSE,
@@ -47,6 +61,10 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
 hline!(([1.2755]),linecolor=(:blue),label="")
 annotate!(0.05, 1.285, text("Experiment: 1.2732(23)",6, :left))
 hline!(([1.2709]),linecolor=(:blue),label="")
+hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
+annotate!(6.6, Charge - ChargeSE - .015, text(
+    "Physical Axial Charge: $fivedigCharge($twodigChargeSE) \n χ² = $(round(chisq, digits=5))",6, :left))
+hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 
 savefig("Physical Axial Charge Plot.png")
 println("Done")

@@ -54,9 +54,9 @@ xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
     yticks=(ytickvals,ytick0))
-    hline!(([Charge + ChargeSE]),linecolor=(:blue),label="")
+    hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
     annotate!(0.05, Charge + ChargeSE + .007, text("Vector Charge: 1.392(13)",6, :left))
-    hline!(([Charge - ChargeSE]),linecolor=(:blue),label="")
+    hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 
 savefig("Vector Charge C3 Plot.png")
 println("------------------------------------------------------")
