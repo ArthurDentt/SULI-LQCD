@@ -1,6 +1,7 @@
 # Plots C3(t), Finds effective mass
 using Plots
 using Statistics
+
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 Scale = 1
@@ -40,13 +41,13 @@ chisq = 0
 for i in range(1,length(RatioEstimates),step=1)
     global chisq += ((Charge-RatioEstimates[i]))^2  / (RatioSE[i]) / (length(Ratio[:,1])-1)
 end
-println("χ²/dof = $chisq")
+println("χ²ᵥ = $chisq")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 # Defining the properly round charge and error for plot annotation
-fivedigCharge = round(Charge,digits=3)
-twodigChargeSE = Integer(round(ChargeSE, digits=2)*1000)
+sigCharge = round(Charge,digits=3)
+sigChargeSE = Integer(round(ChargeSE, digits=2)*1000)
 
 scatter(1:length(RatioEstimates),RatioEstimates,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=RatioSE,
@@ -63,7 +64,7 @@ annotate!(0.05, 1.285, text("Experiment: 1.2732(23)",6, :left))
 hline!(([1.2709]),linecolor=(:blue),label="")
 hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
 annotate!(6.6, Charge - ChargeSE - .015, text(
-    "Physical Axial Charge: $fivedigCharge($twodigChargeSE) \n χ² = $(round(chisq, digits=5))",6, :left))
+    "Physical Axial Charge: $sigCharge($sigChargeSE) \n χ²ᵥ = $(round(chisq, digits=5))",6, :left))
 hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 
 savefig("Physical Axial Charge Plot.png")

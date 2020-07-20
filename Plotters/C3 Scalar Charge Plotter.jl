@@ -1,6 +1,8 @@
 # Plots C3(t), Finds effective mass
 using Plots
 using Statistics
+
+
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 Scale = sqrt(2)
@@ -51,6 +53,9 @@ physgs = n_datamatrix[3,1:8]
 physgsSE = n_datamatrix[4,1:8]
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
+sigCharge = round(Charge,digits=2)
+sigChargeSE = Integer(round(ChargeSE, digits=2)*100)
+
 scatter(0:length(plotrange)-1,C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
     dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
@@ -62,7 +67,8 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
     yticks=(ytickvals,ytick0))
     hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
-    annotate!(0.05, Charge + ChargeSE + .03, text("Scalar Charge: 1.36(18)",6, :left))
+    annotate!(7.13, Charge - ChargeSE - .09, text(
+        "Scalar Charge: $sigCharge($sigChargeSE) \n χ²ᵥ = $(round(chisq, digits=5))",6, :left))
     hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 savefig("Scalar Charge C3 Plot.png")
 

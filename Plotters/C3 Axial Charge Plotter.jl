@@ -2,6 +2,7 @@
 using Plots
 using Statistics
 
+
 Scale = sqrt(2)
 plotrange = 2:9
 

@@ -2,6 +2,7 @@
 using Plots
 using Statistics
 
+
 Scale = sqrt(2)
 plotrange = 2:9
 
@@ -44,6 +45,9 @@ end
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
+sigCharge = round(Charge,digits=3)
+sigChargeSE = Integer(round(ChargeSE, digits=2)*1000)
+
 scatter(1:length(plotrange),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
     dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
@@ -55,7 +59,8 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
     yticks=(ytickvals,ytick0))
     hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
-    annotate!(0.05, Charge + ChargeSE + .007, text("Vector Charge: 1.392(13)",6, :left))
+    annotate!(7.1, Charge - ChargeSE - .013, text(
+        "Vector Charge: $sigCharge($sigChargeSE) \n χ²ᵥ = $(round(chisq, digits=5))",6, :left))
     hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 
 savefig("Vector Charge C3 Plot.png")

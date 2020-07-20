@@ -1,6 +1,8 @@
 # Plots C2(t), Finds effective mass
 using Plots
 using Statistics
+
+
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 println("Starting output...")
