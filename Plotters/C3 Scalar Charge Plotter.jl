@@ -88,7 +88,7 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals2[1],ytickvals2[end]),
     xlims=(xtickvals2[1],xtickvals2[end]),xticks = (xtickvals2,xtick02),
     yticks=(ytickvals2,ytick02))
     hline!(([Chargeren + ChargeSEren]),ls = :dash, lc = :black, label="")
-    annotate!(7.13, Chargeren - ChargeSEren - .09, text(
+    annotate!(7.13, Chargeren - ChargeSEren - .06, text(
         "Scalar Charge: $sigChargeren($sigChargeSEren) \n χ²ᵥ = $(round(chisqren, digits=5))",6, :left))
     hline!(([Chargeren - ChargeSEren]),ls = :dash, lc = :black, label="")
 savefig("Physical Scalar Charge Plot.png")
