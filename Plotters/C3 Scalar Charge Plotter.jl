@@ -14,7 +14,7 @@ ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
 xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
 xtickvals2 = [i for i in range(0,9,step=1)]
-ytickvals2 = [(0.6 +.2*i) for i in range(0,6,step=1)]
+ytickvals2 = [(0.2 +.2*i) for i in range(0,6,step=1)]
 ytick02 = ["" for i in range(1,length(ytickvals2),step=1)]
 xtick02 = ["" for i in range(1,length(xtickvals),step=1)]
 
@@ -28,6 +28,9 @@ close(datafile)
 chisq = value(datamatrix[5])*Scale
 Charge = value(datamatrix[6])*Scale
 ChargeSE = value(datamatrix[7])*Scale
+chisqren = value(datamatrix[8])
+Chargeren = value(datamatrix[9])
+ChargeSEren = value(datamatrix[10])
 datamatrix = [split(split(split(datamatrix[i],"[")[2],"]")[1], ",") for i in range(1,4,step=1)]
 
 # Take incoming data and reformat it into a matrix where each row is a datavector
@@ -55,6 +58,8 @@ cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 sigCharge = round(Charge,digits=2)
 sigChargeSE = Integer(round(ChargeSE, digits=2)*100)
+sigChargeren = round(Chargeren,digits=2)
+sigChargeSEren = Integer(round(ChargeSEren, digits=2)*100)
 
 scatter(0:length(plotrange)-1,C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
@@ -72,8 +77,8 @@ plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
     hline!(([Charge - ChargeSE]),ls = :dash, lc = :black, label="")
 savefig("Scalar Charge C3 Plot.png")
 
-scatter(1:8,physgs*Scale,marker=(:x),markercolor=(:red),
-    linecolor=(:red),markerstrokecolor=(:red),yerror=physgsSE*Scale,
+scatter(1:8,physgs,marker=(:x),markercolor=(:red),
+    linecolor=(:red),markerstrokecolor=(:red),yerror=physgsSE,
     dpi=600,grid=false,xlims=(xtickvals2[1],xtickvals2[end]),
     ylims=(ytickvals2[1],ytickvals2[end]),xticks=xtickvals2,yticks=ytickvals2,frame=(:box),
     foreground_color_legend = nothing, background_color_legend=nothing, label = "170 MeV AMA",
@@ -82,6 +87,10 @@ xlabel!("τ");ylabel!("gₛZₛ");title!("Physical Scalar Charge")
 plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals2[1],ytickvals2[end]),
     xlims=(xtickvals2[1],xtickvals2[end]),xticks = (xtickvals2,xtick02),
     yticks=(ytickvals2,ytick02))
+    hline!(([Chargeren + ChargeSEren]),ls = :dash, lc = :black, label="")
+    annotate!(7.13, Chargeren - ChargeSEren - .09, text(
+        "Scalar Charge: $sigChargeren($sigChargeSEren) \n χ²ᵥ = $(round(chisqren, digits=5))",6, :left))
+    hline!(([Chargeren - ChargeSEren]),ls = :dash, lc = :black, label="")
 savefig("Physical Scalar Charge Plot.png")
 
 println("------------------------------------------------------")
