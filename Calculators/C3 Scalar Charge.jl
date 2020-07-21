@@ -154,6 +154,15 @@ renormgsSE = [JackSE(Ratio[:,i]) for i in range(1,length(Ratio[1,:]),step=1)] # 
 physvalsSE = [sqrt( (renormgs[i]*ZsvSE)^2 + (Zsv*renormgsSE[i])^2 ) for i in range(1,length(renormgs),step=1)]
 physvals = [Zsv * renormgs[i] for i in range(1,length(renormgs),step=1)]
 
+Chargesren = [mean(Ratio[i,:]) for i in range(1,length(Ratio[:,1]),step=1)] # Jack replicates of charge
+Chargeren = mean(Chargesren) #Jack estimator of Charge
+ChargeSEren = JackSE(Chargesren)
+chisqren = 0
+for i in range(1,length(plateau),step=1)
+    global chisqren += ((Chargeren-renormgs[i]))^2  / (renormgsSE[i]) / (length(renormgs)-1)
+end
+println("χ²/dof renorm fit = $chisqren")
+
 # Populating Jack estimators and standard errors
 stderrors = zeros(length(binnedmeans[1,:]))
 finalvals = zeros(length(binnedmeans[1,:]))
@@ -174,6 +183,8 @@ println("χ²/dof = $chisq")
 
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
-global dataoutfile = open("C3ScalarChargeData.txt","a") #saving data to file -> C2, C2 error, phys, phys error
-write(dataoutfile,string(finalvals,"\n", stderrors, "\n", physvals, "\n", physvalsSE, "\n", chisq, "\n", Charge, "\n", ChargeSE, "\n"))
+global dataoutfile = open("C3ScalarChargeData.txt","a") #saving data to file
+write(dataoutfile,string(finalvals,"\n", stderrors, "\n", physvals, "\n", physvalsSE,
+    "\n", chisq, "\n", Charge, "\n", ChargeSE,
+    "\n", chisqren , "\n", Chargeren, "\n", ChargeSEren, "\n"))
 close(dataoutfile)
