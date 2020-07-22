@@ -27,7 +27,7 @@ fileindex = 0
         continue
     end
 
-    readuntil(test_file, "G5G3", keep = false)
+    readuntil(test_file, "G0", keep = false)
     reldata = readuntil(test_file, "END_NUC3PT", keep=false)
     lines=split(reldata,"\n")
 
@@ -50,7 +50,7 @@ Stderrors = [JackSE(i) for i in Jackreplicates]
 
 cd(plotdir)
 
-plotrange = 1:64
+plotrange = 2:9
 
 scatter(plotrange[1]-1:plotrange[end]-1,Jackestimates[plotrange],marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=Stderrors[plotrange],
