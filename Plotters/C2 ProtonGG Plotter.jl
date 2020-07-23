@@ -26,6 +26,10 @@ for i in range(1,length(datamatrix),step=1)
     n_datamatrix[i,:]=datavector
 end
 
+#AA = -2.5796528651133984e12
+#EE = 0.7096598417752594
+#Fitfunction(t) = AA*ℯ^(-EE*t)   # for testing purposes
+
 C2 = n_datamatrix[1,:]
 C2SE = n_datamatrix[2,:]
 Effmass = n_datamatrix[3,:]
@@ -36,6 +40,8 @@ EffectiveMass,EffectiveMassSE = massconvert(EffectiveMass,EffectiveMassSE)
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots")
 
 plot(1:length(C2),C2,markerstrokecolor=(:black),marker=(:x),yerror=C2SE,legend=false,dpi=600,grid=false)
+#plot(plateau,C2[plateau],markerstrokecolor=(:black),marker=(:x),yerror=C2SE[plateau],legend=false,dpi=600,grid=false)
+#plot!(plateau,[Fitfunction(t) for t in plateau],lc=(:red),legend=false,dpi=600,grid=false)
 xlabel!("t");ylabel!("Re(<C₂>)");title!("ProtonGG Re(<C₂>)(t)")
 savefig("ProtonGG C2 Plot.png")
 
