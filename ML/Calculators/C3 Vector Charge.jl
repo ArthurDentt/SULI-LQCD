@@ -4,7 +4,7 @@ using LsqFit
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 function MLVector(plotrange)
-    dir0="C:\\Users\\Drew\\Desktop\\RealData"
+    dir0="C:\\Users\\Drew\\Desktop\\FakeData"
     cd(dir0)
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
