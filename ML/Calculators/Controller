@@ -3,10 +3,11 @@ include("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Calculators\\C3 Vector Charge.j
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Calculators\\C3 Scalar Charge.jl")
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Calculators\\C2 Proton.jl")
 
-plotrange = 2:10
+plotrange = 2:9
 plotrangeproton = 1:64
 
 println("$(MLAxial(plotrange))")
 println("$(MLScalar(plotrange))")
 println("$(MLVector(plotrange))")
 println("$(MLProton(plotrangeproton))")
+println("Done!")
