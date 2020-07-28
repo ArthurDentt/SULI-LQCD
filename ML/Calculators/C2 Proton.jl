@@ -8,10 +8,6 @@ function MLProton(plotrange)
     cd(dir0)
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
-    if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data\\C2ProtonGGData.txt"))
-        rm("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data\\C2ProtonGGData.txt")
-    end
-
     filelist = readdir()
 
     datamatrix = zeros((length(filelist),64))
@@ -28,12 +24,12 @@ function MLProton(plotrange)
             continue
         end
 
-        readuntil(test_file, "NUC_G5C_PP5", keep = false)
+        readuntil(test_file, "NUC_G5C_PP", keep = false)
         reldata = readuntil(test_file, "ENDPROP", keep=false)
         global lines=split(reldata,"\n")
 
         global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        C2 = []
+        global C2 = []
 
         # pushing split lines into a matrix
         for i in range(2,length(lines)-1,step=1)

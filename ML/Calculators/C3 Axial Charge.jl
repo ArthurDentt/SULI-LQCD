@@ -8,10 +8,6 @@ function MLAxial(plotrange)
     cd(dir0)
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
-    if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data\\C2ProtonGGData.txt"))
-        rm("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data\\C2ProtonGGData.txt")
-    end
-
     filelist = readdir()
 
     global datamatrix = zeros((length(filelist),64))
@@ -40,7 +36,6 @@ function MLAxial(plotrange)
             push!(linematrices,split(lines[i]))
             push!(C2, (value(linematrices[i-5][2])-value(linematrices[i-5][4])) ) # U-D contribution
         end
-
         datamatrix[fileindex,:] = C2 # row in datamatrix indicates gauge config
         close(test_file)
     end

@@ -8,10 +8,6 @@ function MLVector(plotrange)
     cd(dir0)
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
-    if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data\\C2ProtonGGData.txt"))
-        rm("C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data\\C2ProtonGGData.txt")
-    end
-
     filelist = readdir()
 
     datamatrix = zeros((length(filelist),64))
@@ -32,8 +28,8 @@ function MLVector(plotrange)
         reldata = readuntil(test_file, "END_NUC3PT", keep=false)
         lines=split(reldata,"\n")
 
-        linematrices=[] # matrix full of pieces of each line in the relevant data file
-        C2 = []
+        global linematrices=[] # matrix full of pieces of each line in the relevant data file
+        global C2 = []
 
         # pushing split lines into a matrix
         for i in range(6,length(lines)-1,step=1)
