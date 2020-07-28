@@ -71,7 +71,7 @@ function MLAxial(plotrange)
     end
 
     JackreplicatesF = [Jackrep(datamatrixF[:,i]) for i in range(1,length(datamatrixF[1,:]),step=1)]
-    JackestimatesF = [mean(i) for i in JackreplicatesF]
+    global JackestimatesF = [mean(i) for i in JackreplicatesF]
     StderrorsF = [JackSE(i) for i in JackreplicatesF]
 
     JackreplicatesR = [Jackrep(datamatrixR[:,i]) for i in range(1,length(datamatrixR[1,:]),step=1)]
