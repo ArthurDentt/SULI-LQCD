@@ -8,6 +8,9 @@ function MLAxial(plotrange)
     dirR="C:\\Users\\Drew\\Desktop\\RealData"
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
+    gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
+    filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
+
     # FAKE DATA PROCESS
     cd(dirF)
     filelist = readdir()
