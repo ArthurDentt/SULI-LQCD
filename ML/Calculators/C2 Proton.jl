@@ -5,14 +5,12 @@ include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 function MLProton(plotrange)
     dir0="C:\\Users\\Drew\\Desktop\\FakeData"
-    cd(dir0)
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
-    filelist = readdir()
-
-    datamatrix = zeros((length(filelist),64))
-
     cd(dir0)
+    filelist = readdir()
+    fpconfig = Integer(length(filelist)/39)
+    global datamatrix = zeros((39,64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -26,20 +24,28 @@ function MLProton(plotrange)
 
         readuntil(test_file, "NUC_G5C_PP", keep = false)
         reldata = readuntil(test_file, "ENDPROP", keep=false)
-        global lines=split(reldata,"\n")
+        lines=split(reldata,"\n")
 
         global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        global C2 = []
+        global C2 = [] # one function C2(t) at gauge config μₐ
 
-        # pushing split lines into a matrix
-        for i in range(2,length(lines)-1,step=1)
-            push!(linematrices,split(lines[i]))
-            push!(C2, value(linematrices[i-1][2])) # positive parity real part only
+        rownum = 0
+        for k in gaugeconfigs
+            rownum += 1
+            if (occursin(k,i))
+                break
+            end
         end
 
-        datamatrix[fileindex,:] = C2
+        # pushing split lines into a matrix
+        for j in range(2,length(lines)-1,step=1)
+            push!(linematrices,split(lines[j]))
+            push!(C2, (value(linematrices[j-1][2])) ) # U-D contribution
+        end
+        datamatrix[rownum,:] += C2/fpconfig # row in datamatrix indicates gauge config
         close(test_file)
     end
+
 
     Jackreplicates = [Jackrep(datamatrix[:,i]) for i in range(1,length(datamatrix[1,:]),step=1)]
     Jackestimates = [mean(i) for i in Jackreplicates]

@@ -8,10 +8,14 @@ function MLVector(plotrange)
     dirR="C:\\Users\\Drew\\Desktop\\RealData"
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
 
+    gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
+    filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
+
     # FAKE DATA PROCESS
     cd(dirF)
     filelist = readdir()
-    global datamatrixF = zeros((length(filelist),64))
+    fpconfig = Integer(length(filelist)/39)
+    global datamatrixF = zeros((39,64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -30,19 +34,28 @@ function MLVector(plotrange)
         global linematrices=[] # matrix full of pieces of each line in the relevant data file
         global C2 = [] # one function C2(t) at gauge config μₐ
 
-        # pushing split lines into a matrix
-        for i in range(6,length(lines)-1,step=1)
-            push!(linematrices,split(lines[i]))
-            push!(C2, (value(linematrices[i-5][2])-value(linematrices[i-5][4])) ) # U-D contribution
+        rownum = 0
+        for k in gaugeconfigs
+            rownum += 1
+            if (occursin(k,i))
+                break
+            end
         end
-        datamatrixF[fileindex,:] = C2 # row in datamatrix indicates gauge config
+
+        # pushing split lines into a matrix
+        for j in range(6,length(lines)-1,step=1)
+            push!(linematrices,split(lines[j]))
+            push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
+        end
+        datamatrixF[rownum,:] += C2/fpconfig # row in datamatrix indicates gauge config
         close(test_file)
     end
 
     # REAL DATA PROCESS
     cd(dirR)
     filelist = readdir()
-    global datamatrixR = zeros((length(filelist),64))
+    fpconfig = Integer(length(filelist)/39)
+    global datamatrixR = zeros((39,64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -61,12 +74,20 @@ function MLVector(plotrange)
         global linematrices=[] # matrix full of pieces of each line in the relevant data file
         global C2 = [] # one function C2(t) at gauge config μₐ
 
-        # pushing split lines into a matrix
-        for i in range(6,length(lines)-1,step=1)
-            push!(linematrices,split(lines[i]))
-            push!(C2, (value(linematrices[i-5][2])-value(linematrices[i-5][4])) ) # U-D contribution
+        rownum = 0
+        for k in gaugeconfigs
+            rownum += 1
+            if (occursin(k,i))
+                break
+            end
         end
-        datamatrixR[fileindex,:] = C2 # row in datamatrix indicates gauge config
+
+        # pushing split lines into a matrix
+        for j in range(6,length(lines)-1,step=1)
+            push!(linematrices,split(lines[j]))
+            push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
+        end
+        datamatrixR[rownum,:] += C2/fpconfig # row in datamatrix indicates gauge config
         close(test_file)
     end
 
@@ -79,8 +100,6 @@ function MLVector(plotrange)
     StderrorsR = [JackSE(i) for i in JackreplicatesR]
 
     cd(plotdir)
-
-    Ratioestimate = mean(JackestimatesR[plotrange]./JackestimatesF[plotrange])
 
     scatter(plotrange[1]-1:plotrange[end]-1,JackestimatesR[plotrange],marker=(:x),markercolor=(:red),
         linecolor=(:red),markerstrokecolor=(:red),yerror=StderrorsR[plotrange],
