@@ -92,15 +92,5 @@ function MLAxial(plotrange)
     xlabel!("τ");ylabel!("gₐ");title!("Axial Charge")
     savefig("Axial Charge C3 Plot.png")
 
-    scatter(plotrange[1]-1:plotrange[end]-1,JackestimatesR[plotrange]./JackestimatesF[plotrange],
-        marker=(:x),markercolor=(:red),linecolor=(:red),markerstrokecolor=(:red),
-        dpi=600,grid=false,frame=(:box), foreground_color_legend = nothing, background_color_legend=nothing,
-        label = "REAL (170 MeV AMA)", legend = ((.75,.95)), legendfontsize = 7)
-    hline!(([Ratioestimate]),linecolor=(:blue),label="")
-    annotate!(1.05, Ratioestimate-.0015, text("Ratio Estimate: $(round(Ratioestimate,digits=3))",6, :left))
-        xlabel!("τ");ylabel!("gₐ");title!("Axial Charge Real/Fake")
-        savefig("Axial Ratio C3 Plot.png")
-
-
     return("Done with ML Axial!")
 end
