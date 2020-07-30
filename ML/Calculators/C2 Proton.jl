@@ -6,6 +6,7 @@ include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 function MLProton(plotrange)
     dir0="C:\\Users\\Drew\\Desktop\\FakeData"
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
+    datadir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data"
 
     gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
     filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
@@ -49,10 +50,18 @@ function MLProton(plotrange)
         close(test_file)
     end
 
-
     Jackreplicates = [Jackrep(datamatrix[:,i]) for i in range(1,length(datamatrix[1,:]),step=1)]
     Jackestimates = [mean(i) for i in Jackreplicates]
     Stderrors = [JackSE(i) for i in Jackreplicates]
+    Jacksinks = Jackreplicates[9]
+
+    cd(datadir)
+    if (isfile("C2Protondata.txt"))
+        rm("C2Protondata.txt")
+    end
+    global dataoutfile = open("C2ProtonData.txt","a")
+    write(dataoutfile,string(Jacksinks, "\n")[4:end])
+    close(dataoutfile)
 
     cd(plotdir)
 

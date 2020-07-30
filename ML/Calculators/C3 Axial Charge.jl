@@ -7,6 +7,14 @@ function MLAxial(plotrange)
     dirF="C:\\Users\\Drew\\Desktop\\FakeData"
     dirR="C:\\Users\\Drew\\Desktop\\RealData"
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
+    datadir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data"
+
+    cd(datadir)
+    global datafile=open("C2ProtonData.txt","r");
+    sourcedata=readlines(datafile)
+    close(datafile)
+    sinkdata = split(split(split(sourcedata[1],"[")[2],"]")[1], ",")
+    sinkdata = [parse(Float64,i) for i in sinkdata]
 
     gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
     filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
@@ -14,8 +22,8 @@ function MLAxial(plotrange)
     # FAKE DATA PROCESS
     cd(dirF)
     filelist = readdir()
-    fpconfig = Integer(length(filelist)/39)
-    global datamatrixF = zeros((39,64))
+    fpconfig = Integer(length(filelist)/length(gaugeconfigs))
+    global datamatrixF = zeros((length(gaugeconfigs),64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -47,7 +55,7 @@ function MLAxial(plotrange)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixF[rownum,:] += C2/fpconfig # row in datamatrix indicates gauge config
+        datamatrixF[rownum,:] += C2/(fpconfig*abs(sinkdata[rownum])) # row in datamatrix indicates gauge config
         close(test_file)
     end
 
@@ -87,7 +95,7 @@ function MLAxial(plotrange)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixR[rownum,:] += C2/fpconfig # row in datamatrix indicates gauge config
+        datamatrixR[rownum,:] += C2/(fpconfig*abs(sinkdata[rownum])) # row in datamatrix indicates gauge config
         close(test_file)
     end
 
