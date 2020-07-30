@@ -101,8 +101,8 @@ function MLVector(plotrange)
 
     cd(plotdir)
 
-    scatter(plotrange[1]-1:plotrange[end]-1,JackestimatesR[plotrange],marker=(:x),markercolor=(:red),
-        linecolor=(:red),markerstrokecolor=(:red),yerror=StderrorsR[plotrange],
+    scatter(plotrange[1]-1:plotrange[end]-1,JackestimatesR[plotrange],marker=(:x),markercolor=(:purple),
+        linecolor=(:purple),markerstrokecolor=(:purple),yerror=StderrorsR[plotrange],
         dpi=600,grid=false,frame=(:box), foreground_color_legend = nothing, background_color_legend=nothing,
         label = "REAL (170 MeV AMA)", legend = ((.75,.95)), legendfontsize = 7)
     scatter!(plotrange[1]-1:plotrange[end]-1,JackestimatesF[plotrange],marker=(:x),markercolor=(:green),
