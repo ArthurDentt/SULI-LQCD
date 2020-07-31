@@ -5,7 +5,7 @@ function value(str)
 end
 
 # Finds the SE of a vector of Jackknife Expectation values (AKA Jackknife Replicates)
-# Note: takes real parts of means and values input
+# Note: takes real parts of means and input values
 function JackSE(JackrepVector)
     coefficient = ((length(JackrepVector)-1)/length(JackrepVector))
     JackSEsum=0
