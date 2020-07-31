@@ -98,15 +98,18 @@ function MLVector(plotrange)
         datamatrixR[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
-
+    
+    # Finding fake Jackknife replicates, estimates, and errors
     JackreplicatesF = [Jackrep(datamatrixF[:,i]) for i in range(1,length(datamatrixF[1,:]),step=1)]
     global JackestimatesF = [mean(i) for i in JackreplicatesF]
     StderrorsF = [JackSE(i) for i in JackreplicatesF]
 
+    # Finding real Jackknife replicates, estimates, and errors
     JackreplicatesR = [Jackrep(datamatrixR[:,i]) for i in range(1,length(datamatrixR[1,:]),step=1)]
     JackestimatesR = [mean(i) for i in JackreplicatesR]
     StderrorsR = [JackSE(i) for i in JackreplicatesR]
 
+    # Finding fake and real Charge Jackknife replicates
     plateaulength = 6
     ChargerepsF = zeros((39,plateaulength))
     ChargerepsR = zeros((39,plateaulength))
@@ -117,17 +120,21 @@ function MLVector(plotrange)
     ChargerepsF = [mean(ChargerepsF[i,:]) for i in range(1,39,step=1)]
     ChargerepsR = [mean(ChargerepsR[i,:]) for i in range(1,39,step=1)]
 
+    # Finding fake and real Charge estimates
     ChargeF = mean(ChargerepsF)
     ChargeR = mean(ChargerepsR)
 
+    # Finding fake and real Charge SE
     ChargeSEF = JackSE(ChargerepsF)
     ChargeSER = JackSE(ChargerepsR)
 
+    # Rounding fake and real charges and SE's to 3 digits for plot viewing
     sigChargeF = round(ChargeF,digits=3)
     sigChargeR = round(ChargeR,digits=3)
     sigChargeSEF = round(ChargeSEF,digits=3)
     sigChargeSER = round(ChargeSER,digits=3)
 
+    # Calculating fake and real chisquared values
     chisqF = 0
     chisqR = 0
     for i in range(1,plateaulength,step=1)
@@ -139,11 +146,13 @@ function MLVector(plotrange)
 
     cd(plotdir)
 
+    # Setting plot boundaries
     xtickvals = [i for i in range(0,9,step=1)]
     ytickvals = [(1.2 +.05*i) for i in range(0,10,step=1)]
     ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
     xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
+    # Plotting ML and Real comparison
     scatter(plotrange[1]-1:plotrange[end]-1,JackestimatesR[plotrange],marker=(:x),markercolor=(:purple),
         linecolor=(:purple),markerstrokecolor=(:purple),yerror=StderrorsR[plotrange],
         dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
