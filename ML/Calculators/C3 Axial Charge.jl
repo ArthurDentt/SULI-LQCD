@@ -164,7 +164,7 @@ function MLAxial(plotrange)
     plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
         xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
         yticks=(ytickvals,ytick0))
-    annotate!(.34, 1.93, text("Vector Charge Estimates:",6, :left, :black))
+    annotate!(.34, 1.93, text("Axial Charge Estimates:",6, :left, :black))
     annotate!(.17, 1.91, text("Real: $sigChargeR($sigChargeSER) | χ²ᵥ = $chisqF ",6, :left, :purple))
     annotate!(.18, 1.89, text("ML: $sigChargeF($sigChargeSEF) | χ²ᵥ = $chisqR ",6, :left, :green))
 
