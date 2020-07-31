@@ -19,10 +19,12 @@ function MLVector(plotrange)
     gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
     filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
 
+    countsF = zeros(length(gaugeconfigs))
+    countsR = zeros(length(gaugeconfigs))
+
     # FAKE DATA PROCESS
     cd(dirF)
     filelist = readdir()
-    fpconfig = Integer(length(filelist)/length(gaugeconfigs))
     global datamatrixF = zeros((length(gaugeconfigs),64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
@@ -49,20 +51,20 @@ function MLVector(plotrange)
                 break
             end
         end
+        countsF[rownum] += 1
 
         # pushing split lines into a matrix
         for j in range(6,length(lines)-1,step=1)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixF[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
+        datamatrixF[rownum,:] += C2*sqrt(2)/(abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
 
     # REAL DATA PROCESS
     cd(dirR)
     filelist = readdir()
-    fpconfig = Integer(length(filelist)/length(gaugeconfigs))
     global datamatrixR = zeros((length(gaugeconfigs),64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
@@ -89,16 +91,22 @@ function MLVector(plotrange)
                 break
             end
         end
+        countsR[rownum] += 1
 
         # pushing split lines into a matrix
         for j in range(6,length(lines)-1,step=1)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixR[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
+        datamatrixR[rownum,:] += C2*sqrt(2)/(abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
-    
+
+    for i in range(1,length(gaugeconfigs),step=1)
+        datamatrixF[i,:] = datamatrixF[i,:]/countsF[i]
+        datamatrixR[i,:] = datamatrixR[i,:]/countsR[i]
+    end
+
     # Finding fake Jackknife replicates, estimates, and errors
     JackreplicatesF = [Jackrep(datamatrixF[:,i]) for i in range(1,length(datamatrixF[1,:]),step=1)]
     global JackestimatesF = [mean(i) for i in JackreplicatesF]

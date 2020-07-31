@@ -11,9 +11,10 @@ function MLProton(plotrange)
     gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
     filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
 
+    counts = zeros(length(gaugeconfigs))
+
     cd(dir0)
     filelist = readdir()
-    fpconfig = Integer(length(filelist)/39)
     global datamatrix = zeros((39,64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
@@ -40,14 +41,18 @@ function MLProton(plotrange)
                 break
             end
         end
-
+        counts[rownum] += 1
+        
         # pushing split lines into a matrix
         for j in range(2,length(lines)-1,step=1)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-1][2])) ) # U-D contribution
         end
-        datamatrix[rownum,:] += C2/fpconfig # row in datamatrix indicates gauge config
+        datamatrix[rownum,:] += C2 # row in datamatrix indicates gauge config
         close(test_file)
+    end
+    for i in range(1,length(gaugeconfigs),step=1)
+        datamatrix[i,:] = datamatrix[i,:]/counts[i]
     end
 
     Jackreplicates = [Jackrep(datamatrix[:,i]) for i in range(1,length(datamatrix[1,:]),step=1)]
