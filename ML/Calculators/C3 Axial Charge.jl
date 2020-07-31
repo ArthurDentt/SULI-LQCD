@@ -55,7 +55,7 @@ function MLAxial(plotrange)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixF[rownum,:] += C2/(fpconfig*abs(sinkdata[rownum])) # row in datamatrix indicates gauge config
+        datamatrixF[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
 
@@ -95,7 +95,7 @@ function MLAxial(plotrange)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixR[rownum,:] += C2/(fpconfig*abs(sinkdata[rownum])) # row in datamatrix indicates gauge config
+        datamatrixR[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
 

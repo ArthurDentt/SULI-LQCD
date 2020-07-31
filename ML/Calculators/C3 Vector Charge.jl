@@ -55,7 +55,7 @@ function MLVector(plotrange)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixF[rownum,:] += C2/(fpconfig*abs(sinkdata[rownum])) # row in datamatrix indicates gauge config
+        datamatrixF[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
 
@@ -95,7 +95,7 @@ function MLVector(plotrange)
             push!(linematrices,split(lines[j]))
             push!(C2, (value(linematrices[j-5][2])-value(linematrices[j-5][4])) ) # U-D contribution
         end
-        datamatrixR[rownum,:] += C2/(fpconfig*abs(sinkdata[rownum])) # row in datamatrix indicates gauge config
+        datamatrixR[rownum,:] += C2*sqrt(2)/(fpconfig*abs(sinkdata[rownum])*3.2) # row in datamatrix indicates gauge config
         close(test_file)
     end
 
@@ -107,16 +107,49 @@ function MLVector(plotrange)
     JackestimatesR = [mean(i) for i in JackreplicatesR]
     StderrorsR = [JackSE(i) for i in JackreplicatesR]
 
+    ChargerepsF = zeros((39,6))
+    ChargerepsR = zeros((39,6))
+    for i in range(3,8,step=1) # 2->7
+        ChargerepsF[:,i-2] = JackreplicatesF[i]
+        ChargerepsR[:,i-2] = JackreplicatesR[i]
+    end
+    ChargerepsF = [mean(ChargerepsF[i,:]) for i in range(1,39,step=1)]
+    ChargerepsR = [mean(ChargerepsR[i,:]) for i in range(1,39,step=1)]
+
+    ChargeF = mean(ChargerepsF)
+    ChargeR = mean(ChargerepsR)
+
+    ChargeSEF = JackSE(ChargerepsF)
+    ChargeSER = JackSE(ChargerepsR)
+
+    sigChargeF = round(ChargeF,digits=3)
+    sigChargeR = round(ChargeR,digits=3)
+    sigChargeSEF = round(ChargeSEF,digits=3)
+    sigChargeSER = round(ChargeSER,digits=3)
+
     cd(plotdir)
+
+    xtickvals = [i for i in range(0,9,step=1)]
+    ytickvals = [(1.2 +.05*i) for i in range(0,10,step=1)]
+    ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
+    xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
     scatter(plotrange[1]-1:plotrange[end]-1,JackestimatesR[plotrange],marker=(:x),markercolor=(:purple),
         linecolor=(:purple),markerstrokecolor=(:purple),yerror=StderrorsR[plotrange],
-        dpi=600,grid=false,frame=(:box), foreground_color_legend = nothing, background_color_legend=nothing,
-        label = "REAL (170 MeV AMA)", legend = ((.75,.95)), legendfontsize = 7)
+        dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
+        ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box),
+        foreground_color_legend = nothing, background_color_legend=nothing, label = "REAL",
+        legend = ((.85,.95)), legendfontsize = 7)
     scatter!(plotrange[1]-1:plotrange[end]-1,JackestimatesF[plotrange],marker=(:x),markercolor=(:green),
         linecolor=(:green),markerstrokecolor=(:green),yerror=StderrorsF[plotrange],
-        label = "ML (170 MeV AMA)")
+        label = "ML")
     xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
+    plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
+        xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
+        yticks=(ytickvals,ytick0))
+    annotate!(.34, 1.68, text("Vector Charge Estimates:",6, :left, :black))
+    annotate!(.17, 1.66, text("Real: $sigChargeR($sigChargeSER) | χ²ᵥ = WIP :)",6, :left, :purple))
+    annotate!(.18, 1.64, text("ML: $sigChargeF($sigChargeSEF) | χ²ᵥ = WIP :)",6, :left, :green))
     savefig("Vector Charge C3 Plot.png")
 
     return("Done with ML Vector!")

@@ -6,7 +6,7 @@ include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 Tindex=0
 dir0="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
 cd(dir0)
-Index = 9
+Index = 10
 if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2ProtonGGData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2ProtonGGData.txt")
 end

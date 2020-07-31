@@ -6,10 +6,10 @@ using Statistics
 Scale = sqrt(2)
 plotrange = 2:9
 
-xtickvals = [i for i in range(0,9,step=1)]
-ytickvals = [(1.3 +.05*i) for i in range(0,8,step=1)]
-ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
-xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
+#xtickvals = [i for i in range(0,9,step=1)]
+#ytickvals = [(1.3 +.05*i) for i in range(0,8,step=1)]
+#ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
+#xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
 
 println("Starting output...")
 
@@ -50,14 +50,14 @@ sigChargeSE = Integer(round(ChargeSE, digits=2)*1000)
 
 scatter(1:length(plotrange),C3[plotrange]*Scale,marker=(:x),markercolor=(:red),
     linecolor=(:red),markerstrokecolor=(:red),yerror=C3SE[plotrange]*Scale,
-    dpi=600,grid=false,xlims=(xtickvals[1],xtickvals[end]),
-    ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box),
+    dpi=600,grid=false,#xlims=(xtickvals[1],xtickvals[end]),
+    #ylims=(ytickvals[1],ytickvals[end]),xticks=xtickvals,yticks=ytickvals,frame=(:box),
     foreground_color_legend = nothing, background_color_legend=nothing, label = "170 MeV AMA",
     legend = ((.85,.95)), legendfontsize = 7)
 xlabel!("τ");ylabel!("gᵥ");title!("Vector Charge")
-plot!(twinx(), xmirror=:true,grid=:false,ylims=(ytickvals[1],ytickvals[end]),
-    xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
-    yticks=(ytickvals,ytick0))
+plot!(twinx(), xmirror=:true,grid=:false)#,ylims=(ytickvals[1],ytickvals[end]),
+    #xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
+    #yticks=(ytickvals,ytick0))
     hline!(([Charge + ChargeSE]),ls = :dash, lc = :black, label="")
     annotate!(7.1, Charge - ChargeSE - .013, text(
         "Vector Charge: $sigCharge($sigChargeSE) \n χ²ᵥ = $(round(chisq, digits=5))",6, :left))
