@@ -4,7 +4,7 @@ using LsqFit
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
 function MLProton(plotrange)
-    dir0="C:\\Users\\Drew\\Desktop\\FakeData"
+    dir0="C:\\Users\\Drew\\Desktop\\RealData"
     plotdir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\FinalPlots"
     datadir="C:\\Users\\Drew\\github\\SULI-LQCD\\ML\\Data"
 
