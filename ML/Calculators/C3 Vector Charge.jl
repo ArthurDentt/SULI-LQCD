@@ -107,8 +107,9 @@ function MLVector(plotrange)
     JackestimatesR = [mean(i) for i in JackreplicatesR]
     StderrorsR = [JackSE(i) for i in JackreplicatesR]
 
-    ChargerepsF = zeros((39,6))
-    ChargerepsR = zeros((39,6))
+    plateaulength = 6
+    ChargerepsF = zeros((39,plateaulength))
+    ChargerepsR = zeros((39,plateaulength))
     for i in range(3,8,step=1) # 2->7
         ChargerepsF[:,i-2] = JackreplicatesF[i]
         ChargerepsR[:,i-2] = JackreplicatesR[i]
@@ -126,6 +127,15 @@ function MLVector(plotrange)
     sigChargeR = round(ChargeR,digits=3)
     sigChargeSEF = round(ChargeSEF,digits=3)
     sigChargeSER = round(ChargeSER,digits=3)
+
+    chisqF = 0
+    chisqR = 0
+    for i in range(1,plateaulength,step=1)
+        chisqF += ((ChargeF-JackestimatesF[i+2]))^2  / (StderrorsF[i+2]) / (plateaulength-1)
+        chisqR += ((ChargeR-JackestimatesR[i+2]))^2  / (StderrorsR[i+2]) / (plateaulength-1)
+    end
+    chisqF = round(chisqF,digits=3)
+    chisqR = round(chisqR,digits=3)
 
     cd(plotdir)
 
@@ -148,8 +158,8 @@ function MLVector(plotrange)
         xlims=(xtickvals[1],xtickvals[end]),xticks = (xtickvals,xtick0),
         yticks=(ytickvals,ytick0))
     annotate!(.34, 1.68, text("Vector Charge Estimates:",6, :left, :black))
-    annotate!(.17, 1.66, text("Real: $sigChargeR($sigChargeSER) | χ²ᵥ = WIP :)",6, :left, :purple))
-    annotate!(.18, 1.64, text("ML: $sigChargeF($sigChargeSEF) | χ²ᵥ = WIP :)",6, :left, :green))
+    annotate!(.17, 1.66, text("Real: $sigChargeR($sigChargeSER) | χ²ᵥ = $chisqF ",6, :left, :purple))
+    annotate!(.18, 1.64, text("ML: $sigChargeF($sigChargeSEF) | χ²ᵥ = $chisqR ",6, :left, :green))
     savefig("Vector Charge C3 Plot.png")
 
     return("Done with ML Vector!")
