@@ -119,19 +119,6 @@ EffectiveMassSE = JackSE(fitmassreps[2,:])
 
 Fitfunction(t) = Amplitude*ℯ^(-EffectiveMass*t)
 
-# Populating Jack replicates of effective mass
-Effmassrep=zeros((numconfigs,length(binneddata[1,:])))
-for i in range(1,length(binneddata[:,1]),step=1)
-    Effmassrep[i,:]=Emass(binneddata[i,:])
-end
-
-# Populating effective mass and error for m* plot
-Effmass = zeros(length(Effmassrep[1,:]))
-EffmassSE = zeros(length(Effmassrep[1,:]))
-for i in range(1,length(Effmassrep[1,:]),step=1)
-    Effmass[i]=mean(Effmassrep[:,i])
-    EffmassSE[i] = JackSE(Effmassrep[:,i])
-end
 covariancemat = cov(foldsavedbins[:,plateau])
 icov = inv(covariancemat)
 foldfinalvals = (finalvals + reverse(finalvals))/2
@@ -148,7 +135,6 @@ println("χ²/dof = $chisq")
 cd(plotdir)
 global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
 write(dataoutfile,string(finalvals,"\n", stderrors,
-    "\n", Effmass, "\n", EffmassSE,
     "\n", EffectiveMass, "\n", EffectiveMassSE,
     "\n", "χ²=$chisq", "\n"))
 close(dataoutfile)
