@@ -26,10 +26,6 @@ for i in range(1,length(datamatrix),step=1)
     n_datamatrix[i,:]=datavector
 end
 
-#AA = -2.5796528651133984e12
-#EE = 0.7096598417752594
-#Fitfunction(t) = AA*ℯ^(-EE*t)   # for testing purposes
-
 C2 = n_datamatrix[1,:]
 C2SE = n_datamatrix[2,:]
 
