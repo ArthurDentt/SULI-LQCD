@@ -120,6 +120,7 @@ for i in range(1,length(binneddata[1,:]),step=1)
     stderrors[i] = JackSE(binneddata[:,i])
 end
 
+#Fitting to plateau (range 2-7)
 plateau = 3:8
 Charges = [mean(binneddata[:,i]) for i in plateau] # Jack replicates of charge
 Charge = mean(Charges) #Jack estimator of Charge
