@@ -27,7 +27,8 @@ end
 # gauge configuration list
 gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
 filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
-fpconfig = 112
+fpconfig = 112 #files per gauge config (112 measurements per gauge config)
+# fpconfig is used to average all the gauge configs
 
 # For loop Iterating over the "TX" files indicating source time
 numconfigs = 39
@@ -81,14 +82,14 @@ global C2 = []
                 push!(linesvector,split(lines[l]))
             end
 
-            Op1 = zeros(Float64,timelength)
+            Op = zeros(Float64,timelength)
 
             # Fill operator vector with each line's relevant value (U-D)
             for l in range(1,length(linesvector),step=1)
-                Op1[l]=value(linesvector[l][2]) - value(linesvector[l][4])
+                Op[l]=value(linesvector[l][2]) - value(linesvector[l][4])
             end
-            Op1 = reshapevector(Op1, Tindex)
-            binneddata[rownum,:] += Op1/fpconfig
+            Op = reshapevector(Op, Tindex)
+            binneddata[rownum,:] += Op/fpconfig
 
         end
         # Printing confirmation and path of completed file
@@ -134,7 +135,7 @@ println("χ²/dof = $chisq")
 # saving gA replicates from plateau to file for gA/gV plot
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 gVratio = binneddata[:,2:9]
-global dataoutfile = open("gVRatioData.txt","a") #saving data to file -> C2, C2 error, m*, m* error
+global dataoutfile = open("gVRatioData.txt","a") #saving data to file for gVratio
 gVratiostring = ""
 for i in range(1,length(gVratio[1,:]),step=1)
     global gVratiostring = string(gVratiostring,gVratio[:,i],"\n")
