@@ -11,8 +11,8 @@ if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2PionData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2PionData.txt")
 end
 
-#plotting directory
-plotdir = "C:\\Users\\Drew\\github\\SULI-LQCD\\Data"
+# data-saving directory
+datadir = "C:\\Users\\Drew\\github\\SULI-LQCD\\Data"
 
 # gauge configuration list
 gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
@@ -132,7 +132,8 @@ for i in range(1,length(plateau),step=1)
 end
 println("χ²/dof = $chisq")
 
-cd(plotdir)
+#Changing to data directory and ouputting useful info for plotting / calcs.
+cd(datadir)
 global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
 write(dataoutfile,string(finalvals,"\n", stderrors,
     "\n", EffectiveMass, "\n", EffectiveMassSE,
