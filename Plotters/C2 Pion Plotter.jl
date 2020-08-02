@@ -9,7 +9,6 @@ plotdir = "C:\\Users\\Drew\\github\\SULI-LQCD\\FinalPlots"
 println("Starting output...")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
-plotrangem = 1:64
 global datafile=open("C2PionData.txt","r");
 datamatrix=readlines(datafile)
 EffectiveMass = parse(Float64,datamatrix[5])
