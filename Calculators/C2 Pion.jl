@@ -78,6 +78,7 @@ global C2 = []
                 Op1[l]=value(linesvector[l][2])
             end
 
+            #Op1 = reshapevector(Op1, Tindex) #Do we not need this???
             binneddata[rownum,:] += Op1/fpconfig
 
         end
