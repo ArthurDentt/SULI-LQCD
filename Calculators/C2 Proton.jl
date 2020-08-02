@@ -131,7 +131,7 @@ println("χ²/dof = $chisq")
 
 cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
 global dataoutfile = open("C2ProtonData.txt","a")
-#saving data to file -> C2, C2 error, m*, m* error,M*E , M*SE E, C2(T) replicates, χ²
+#saving data to file
 write(dataoutfile,string(finalvals,"\n", stderrors, "\n", EffectiveMass,
     "\n", EffectiveMassSE, "\n", "χ²=$chisq", "\n"))
 close(dataoutfile)

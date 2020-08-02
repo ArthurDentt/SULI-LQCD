@@ -135,7 +135,7 @@ println("χ²/dof = $chisq")
 
 #Changing to data directory and ouputting useful info for plotting / calcs.
 cd(datadir)
-global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
+global dataoutfile = open("C2PionData.txt","a") #saving data to file
 write(dataoutfile,string(finalvals,"\n", stderrors,
     "\n", EffectiveMass, "\n", EffectiveMassSE,
     "\n", "χ²=$chisq", "\n"))
