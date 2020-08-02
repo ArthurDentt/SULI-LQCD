@@ -11,10 +11,19 @@ if (isfile("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2PionData.txt"))
     rm("C:\\Users\\Drew\\github\\SULI-LQCD\\Data\\C2PionData.txt")
 end
 
+#plotting directory
+plotdir = "C:\\Users\\Drew\\github\\SULI-LQCD\\Data"
+
+# gauge configuration list
+gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
+filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
+fpconfig = 112
+
 # For loop Iterating over the "TX" files indicating source time
-numfiles=7*16*39
+numconfigs = 39
+timelength = 64
 tempdata = []
-alldata = zeros(ComplexF64,(numfiles,64))
+binneddata = zeros(Float64,(numconfigs,64))
 global C2 = []
 @progress (name="Plotting...") for i in range(0,48,step=8)
     Tindex=i
@@ -23,12 +32,11 @@ global C2 = []
     dir="C:\\Users\\Drew\\Desktop\\BNL DATA\\AMA\\T$Tindex"
     cd(dir)
     # looping over all position (x,y,z) folders within TX folder
-    for j in range(1,length(readdir()),step=1)
-        rdir=readdir()[j]
-        dir = string(dir, "\\", rdir)
+    for foldername in readdir()
+        dir = string(dir, "\\", foldername)
         cd(dir)
 
-        global filevector = []
+        global filevector = zeros(Float64,(numconfigs,64))
 
         # Starting the main loop running over each text file ending in .dat.###
         for k in range(0,42,step=1)
@@ -41,49 +49,38 @@ global C2 = []
                 continue
             end
 
+            #Finding row number (based on gauge config) 748->1, ..., 1420->39
+            rownum = 0
+            for gaugenum in gaugeconfigs
+                rownum += 1
+                if (occursin(gaugenum,"$findex"))
+                    break
+                end
+            end
+
             # Reading to keyword, splitting lines, instantiating + zeroing everything
             readuntil(test_file, "GAM_5", keep = false)
             reldata = readuntil(test_file, "ENDPROP", keep=false)
             lines=split(reldata,"\n")
 
             # This is where finding C₂(t) begins #
-            times=[]; # times
-            linematrices=[] # matrix full of pieces of each line in the relevant data file
+            linesvector=[] # vector full of lines in the relevant data file
 
-
-            # pushing split lines into a matrix
+            # pushing data-containing split lines into a vector
             for l in range(2,length(lines)-1,step=1)
-                push!(linematrices,split(lines[l]))
-                push!(times,parse(Int,linematrices[l-1][1]))
+                push!(linesvector,split(lines[l]))
             end
 
-            Op1 = zeros(ComplexF64,(length(times)))
+            Op1 = zeros(Float64,(length(lines)-2))
 
-            # Fill operator arrays
-            for l in range(1,length(linematrices),step=1)
-                Op1[l]=value(linematrices[l][2])+(value(linematrices[l][3]))im
-
+            # Fill operator vector with each line's relevant value
+            for l in range(1,length(linesvector),step=1)
+                Op1[l]=value(linesvector[l][2])
             end
 
-            push!(filevector,Op1[:])
+            binneddata[rownum,:] += Op1/fpconfig
 
         end
-
-        # Rearrange Operatormatrix into C₂(μₐ,t)
-        for k in range(1,length(filevector),step=1)
-            gaugeconfig=[] # Slice t=l across all μₐ
-            for l in range(1,length(filevector[1]),step=1)
-                push!(gaugeconfig,filevector[k][l])
-            end
-            push!(C2,gaugeconfig)
-        end
-
-        for i in range(1,length(C2),step=1)
-            push!(tempdata,C2[i])
-        end
-
-        # This is where finding C₂(t) ends #
-
         # Printing confirmation and path of completed file
         println("Done with $dir")
 
@@ -94,44 +91,25 @@ global C2 = []
     end
 end
 close(test_file)
-for i in range(1,length(C2),step=1)
-    alldata[i,:]=C2[i]
-end
-alldata=real.(alldata)
 
-# Binning data
-binnedmeans=zeros((39,length(alldata[1,:])))
-binnedsavedmeans=zeros((39,length(alldata[1,:])))
-for i in range(1,39,step=1) # Iterate over gauge configurations
-    binnedmatrix = zeros((7*16,64))
-    for j in range(1,7*16,step=1)
-        index = i+39(j-1)
-        binnedmatrix[j,:]=alldata[index,:]
-    end
-    meanvector = zeros(length(binnedmatrix[1,:]))
-    for j in range(1,length(binnedmatrix[1,:]),step=1)
-        meanvector[j]=mean(binnedmatrix[:,j])
-    end
-    binnedmeans[i,:] = meanvector
-    binnedsavedmeans[i,:] = meanvector
-end
+#folding binned data before it becomes jackknife replicates
+foldsavedbins = (binneddata[:,:]+reverse(binneddata[:,:],dims=2))/2
 
-# Turn binnedmeans into binned Jack replicates, Populating final Jack estimators and errors
-stderrors = zeros(length(binnedmeans[1,:]))
-finalvals = zeros(length(binnedmeans[1,:]))
-for i in range(1,length(binnedmeans[1,:]),step=1)
-    binnedmeans[:,i] = Jackrep(binnedmeans[:,i])
-    finalvals[i]=mean(binnedmeans[:,i])
-    stderrors[i] = JackSE(binnedmeans[:,i])
+# Turn binneddata into binned Jack replicates, Populating final Jack estimators and errors
+stderrors = zeros(length(binneddata[1,:]))
+finalvals = zeros(length(binneddata[1,:]))
+for i in range(1,length(binneddata[1,:]),step=1)
+    binneddata[:,i] = Jackrep(binneddata[:,i])
+    finalvals[i]=mean(binneddata[:,i])
+    stderrors[i] = JackSE(binneddata[:,i])
 end
 
 # Fitting data to find m*
-fitmassreps = zeros((2,length(binnedmeans[:,1])))
+fitmassreps = zeros((2,length(binneddata[:,1])))
 plateau = 7:11
 model(t,p) = p[1]*exp.(-p[2]*t)
-foldbins = (binnedmeans[:,:]+reverse(binnedmeans[:,:],dims=2))/2
-foldsavedbins = (binnedsavedmeans[:,:]+reverse(binnedsavedmeans[:,:],dims=2))/2
-for i in range(1,length(binnedmeans[:,1]),step=1) # folding data vvvv
+foldbins = (binneddata[:,:]+reverse(binneddata[:,:],dims=2))/2
+for i in range(1,length(binneddata[:,1]),step=1) # folding data vvvv
     global fit = curve_fit(model,plateau,foldbins[i,plateau],[1,.01])
     fitmassreps[:,i] = fit.param
 end
@@ -142,9 +120,9 @@ EffectiveMassSE = JackSE(fitmassreps[2,:])
 Fitfunction(t) = Amplitude*ℯ^(-EffectiveMass*t)
 
 # Populating Jack replicates of effective mass
-Effmassrep=zeros((39,length(alldata[1,:])))
-for i in range(1,length(binnedmeans[:,1]),step=1)
-    Effmassrep[i,:]=Emass(binnedmeans[i,:])
+Effmassrep=zeros((numconfigs,length(binneddata[1,:])))
+for i in range(1,length(binneddata[:,1]),step=1)
+    Effmassrep[i,:]=Emass(binneddata[i,:])
 end
 
 # Populating effective mass and error for m* plot
@@ -167,7 +145,7 @@ for i in range(1,length(plateau),step=1)
 end
 println("χ²/dof = $chisq")
 
-cd("C:\\Users\\Drew\\github\\SULI-LQCD\\Data")
+cd(plotdir)
 global dataoutfile = open("C2PionData.txt","a") #saving data to file -> C2, C2 error, m* plot, m* error plot, m* estimate, m* estimate error
 write(dataoutfile,string(finalvals,"\n", stderrors,
     "\n", Effmass, "\n", EffmassSE,
