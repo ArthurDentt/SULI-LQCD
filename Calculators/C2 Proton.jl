@@ -93,9 +93,9 @@ close(test_file)
 binnedsaveddata = binneddata
 
 # Turn binneddata into binned Jack replicates, Populating final Jack estimators and errors
-stderrors = zeros(length(binneddata[1,:]))
-finalvals = zeros(length(binneddata[1,:]))
-for i in range(1,length(binneddata[1,:]),step=1)
+stderrors = zeros(timelength)
+finalvals = zeros(timelength)
+for i in range(1,timelength,step=1)
     binneddata[:,i] = Jackrep(binneddata[:,i])
     finalvals[i]=mean(binneddata[:,i])
     stderrors[i] = JackSE(binneddata[:,i])

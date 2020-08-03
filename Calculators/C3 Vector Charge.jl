@@ -104,19 +104,20 @@ end
 close(test_file)
 
 # Turn binneddata into binned Jack replicates,
-for i in range(1,length(binneddata[1,:]),step=1)
+for i in range(1,timelength,step=1)
     binneddata[:,i] = Jackrep(binneddata[:,i])
 end
 
 #  Renormalizing by sourcedata
-for i in range(1,length(binneddata[:,1]),step=1)
+for i in range(1,numconfigs,step=1)
     binneddata[i,:] = binneddata[i,:]/(abs(sourcedata[i])*3.2)
 end
 
+
 # Populating Jack estimators and standard errors
-stderrors = zeros(length(binneddata[1,:]))
-finalvals = zeros(length(binneddata[1,:]))
-for i in range(1,length(binneddata[1,:]),step=1)
+stderrors = zeros(timelength)
+finalvals = zeros(timelength)
+for i in range(1,timelength,step=1)
     finalvals[i]=mean(binneddata[:,i])
     stderrors[i] = JackSE(binneddata[:,i])
 end
