@@ -5,7 +5,7 @@ using Statistics
 
 include("C:\\Users\\Drew\\github\\SULI-LQCD\\myfunctions.jl")
 
-Scale = sqrt(2)
+Scale = 1
 plotrange = 1:9
 
 xtickvals = [i for i in range(0,9,step=1)]

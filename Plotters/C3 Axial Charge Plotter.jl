@@ -3,7 +3,7 @@ using Plots
 using Statistics
 
 
-Scale = 2/3
+Scale = 1
 plotrange = 2:9
 
 xtickvals = [i for i in range(0,9,step=1)]

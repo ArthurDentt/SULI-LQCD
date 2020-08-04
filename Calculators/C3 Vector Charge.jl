@@ -90,7 +90,6 @@ global C2 = []
             end
             Op = reshapevector(Op, Tindex)
             binneddata[rownum,:] += Op/fpconfig
-
         end
         # Printing confirmation and path of completed file
         println("Done with $dir")
