@@ -7,7 +7,7 @@ plotrange = 1:9
 plotrangeproton = 1:64
 
 println("$(MLProton(plotrangeproton))")
+println("$(MLVector(plotrange))")
 println("$(MLAxial(plotrange))")
 println("$(MLScalar(plotrange))")
-println("$(MLVector(plotrange))")
 println("Done!")

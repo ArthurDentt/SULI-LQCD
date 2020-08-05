@@ -106,13 +106,26 @@ function MLAxial(plotrange)
         datamatrixR[i,:] = datamatrixR[i,:]/countsR[i]
     end
 
+    # Defining replicates of gA before any further analysis to be used in physical gA calc
+    gArepsF = zeros(numconfigs,length(plotrange))
+    gArepsR = zeros(numconfigs,length(plotrange))
+
+    # Extracting fake gA replicates
     JackreplicatesF = [Jackrep(datamatrixF[:,i]) for i in range(1,length(datamatrixF[1,:]),step=1)]
     global JackestimatesF = [mean(i) for i in JackreplicatesF]
     StderrorsF = [JackSE(i) for i in JackreplicatesF]
+    for i in range(1,numconfigs,step=1)
+        gArepsF[i,:] = JackreplicatesF[i][plotrange]
+    end
 
+    # Extracting real gA replicates
     JackreplicatesR = [Jackrep(datamatrixR[:,i]) for i in range(1,length(datamatrixR[1,:]),step=1)]
     JackestimatesR = [mean(i) for i in JackreplicatesR]
     StderrorsR = [JackSE(i) for i in JackreplicatesR]
+    JackreplicatesmatR = zeros((numconfigs,timelength))
+    for i in range(1,numconfigs,step=1)
+        gArepsR[i,:] = JackreplicatesR[i][plotrange]
+    end
 
     # Finding fake and real Charge Jackknife replicates
     plateaulength = 6
@@ -152,7 +165,7 @@ function MLAxial(plotrange)
     cd(plotdir)
 
     # Setting plot boundaries
-    xtickvals = [i for i in range(0,9,step=1)]
+    xtickvals = [i for i in (plotrange[1]-1):(plotrange[end]+1)]
     ytickvals = [(1.45 +.05*i) for i in range(0,10,step=1)]
     ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
     xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
@@ -177,5 +190,12 @@ function MLAxial(plotrange)
 
     savefig("Axial Charge C3 Plot.png")
 
-    return("Done with ML Axial!")
+    return("Done with bare ML Axial Charge!")
+
+    # Finding physical axial charge now
+    # Have gA replicates real and fake... need gV replicates real and fake,
+    # then take ratio, find errors and estimates, find avg errors and estimates,
+    # then plot it all
+
+    return("Done with physical ML Axial Charge!")
 end
