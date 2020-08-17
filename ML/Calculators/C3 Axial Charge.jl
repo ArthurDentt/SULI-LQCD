@@ -18,14 +18,15 @@ function MLAxial(plotrange)
 
     gaugeconfigs = ["$(748 + 16*i)" for i in range(0,Integer((1420-748)/16),step=1)]
     filter!(e->e∉["956","1004","1036","1052"], gaugeconfigs)
-
+    timelength = 64
+    numconfigs = length(gaugeconfigs)
     countsF = zeros(length(gaugeconfigs))
     countsR = zeros(length(gaugeconfigs))
 
     # FAKE DATA PROCESS
     cd(dirF)
     filelist = readdir()
-    global datamatrixF = zeros((length(gaugeconfigs),64))
+    datamatrixF = zeros((length(gaugeconfigs),64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -41,8 +42,8 @@ function MLAxial(plotrange)
         reldata = readuntil(test_file, "END_NUC3PT", keep=false)
         lines=split(reldata,"\n")
 
-        global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        global C2 = [] # one function C2(t) at gauge config μₐ
+        linematrices=[] # matrix full of pieces of each line in the relevant data file
+        C2 = [] # one function C2(t) at gauge config μₐ
 
         rownum = 0
         for k in gaugeconfigs
@@ -65,7 +66,7 @@ function MLAxial(plotrange)
     # REAL DATA PROCESS
     cd(dirR)
     filelist = readdir()
-    global datamatrixR = zeros((39,64))
+    datamatrixR = zeros((39,64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -81,8 +82,8 @@ function MLAxial(plotrange)
         reldata = readuntil(test_file, "END_NUC3PT", keep=false)
         lines=split(reldata,"\n")
 
-        global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        global C2 = [] # one function C2(t) at gauge config μₐ
+        linematrices=[] # matrix full of pieces of each line in the relevant data file
+        C2 = [] # one function C2(t) at gauge config μₐ
 
         rownum = 0
         for k in gaugeconfigs
@@ -112,7 +113,7 @@ function MLAxial(plotrange)
 
     # Extracting fake gA replicates
     JackreplicatesF = [Jackrep(datamatrixF[:,i]) for i in range(1,length(datamatrixF[1,:]),step=1)]
-    global JackestimatesF = [mean(i) for i in JackreplicatesF]
+    JackestimatesF = [mean(i) for i in JackreplicatesF]
     StderrorsF = [JackSE(i) for i in JackreplicatesF]
     for i in range(1,numconfigs,step=1)
         gArepsF[i,:] = JackreplicatesF[i][plotrange]
@@ -128,13 +129,15 @@ function MLAxial(plotrange)
     end
 
     # Finding fake and real Charge Jackknife replicates
-    plateaulength = 6
+    plateaulength = length(plotrange)
     ChargerepsF = zeros((39,plateaulength))
     ChargerepsR = zeros((39,plateaulength))
-    for i in range(3,8,step=1) # 2->7
-        ChargerepsF[:,i-2] = JackreplicatesF[i]
-        ChargerepsR[:,i-2] = JackreplicatesR[i]
+    for i in plotrange # 1->9
+        ChargerepsF[:,i-(plotrange[1]-1)] = JackreplicatesF[i]
+        ChargerepsR[:,i-(plotrange[1]-1)] = JackreplicatesR[i]
     end
+    PhysrepsF = ChargerepsF
+    PhysrepsR = ChargerepsR
     ChargerepsF = [mean(ChargerepsF[i,:]) for i in range(1,39,step=1)]
     ChargerepsR = [mean(ChargerepsR[i,:]) for i in range(1,39,step=1)]
 
@@ -156,8 +159,8 @@ function MLAxial(plotrange)
     chisqF = 0
     chisqR = 0
     for i in range(1,plateaulength,step=1)
-        chisqF += ((ChargeF-JackestimatesF[i+2]))^2  / (StderrorsF[i+2]) / (plateaulength-1)
-        chisqR += ((ChargeR-JackestimatesR[i+2]))^2  / (StderrorsR[i+2]) / (plateaulength-1)
+        chisqF += ((ChargeF-JackestimatesF[i]))^2  / (StderrorsF[i]) / (plateaulength-1)
+        chisqR += ((ChargeR-JackestimatesR[i]))^2  / (StderrorsR[i]) / (plateaulength-1)
     end
     chisqF = round(chisqF,digits=3)
     chisqR = round(chisqR,digits=3)
@@ -165,7 +168,7 @@ function MLAxial(plotrange)
     cd(plotdir)
 
     # Setting plot boundaries
-    xtickvals = [i for i in (plotrange[1]-1):(plotrange[end]+1)]
+    xtickvals = [i for i in range(0,9,step=1)]
     ytickvals = [(1.45 +.05*i) for i in range(0,10,step=1)]
     ytick0 = ["" for i in range(1,length(ytickvals),step=1)]
     xtick0 = ["" for i in range(1,length(xtickvals),step=1)]
@@ -190,12 +193,6 @@ function MLAxial(plotrange)
 
     savefig("Axial Charge C3 Plot.png")
 
-    return("Done with bare ML Axial Charge!")
+    return(PhysrepsF, PhysrepsR)
 
-    # Finding physical axial charge now
-    # Have gA replicates real and fake... need gV replicates real and fake,
-    # then take ratio, find errors and estimates, find avg errors and estimates,
-    # then plot it all
-
-    return("Done with physical ML Axial Charge!")
 end

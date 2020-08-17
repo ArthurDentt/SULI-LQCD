@@ -15,7 +15,7 @@ function MLProton(plotrange)
 
     cd(dir0)
     filelist = readdir()
-    global datamatrix = zeros((39,64))
+    datamatrix = zeros((39,64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -31,8 +31,8 @@ function MLProton(plotrange)
         reldata = readuntil(test_file, "ENDPROP", keep=false)
         lines=split(reldata,"\n")
 
-        global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        global C2 = [] # one function C2(t) at gauge config μₐ
+        linematrices=[] # matrix full of pieces of each line in the relevant data file
+        C2 = [] # one function C2(t) at gauge config μₐ
 
         rownum = 0
         for k in gaugeconfigs
@@ -42,7 +42,7 @@ function MLProton(plotrange)
             end
         end
         counts[rownum] += 1
-        
+
         # pushing split lines into a matrix
         for j in range(2,length(lines)-1,step=1)
             push!(linematrices,split(lines[j]))

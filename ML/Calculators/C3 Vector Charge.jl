@@ -25,7 +25,7 @@ function MLVector(plotrange)
     # FAKE DATA PROCESS
     cd(dirF)
     filelist = readdir()
-    global datamatrixF = zeros((length(gaugeconfigs),64))
+    datamatrixF = zeros((length(gaugeconfigs),64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -41,8 +41,8 @@ function MLVector(plotrange)
         reldata = readuntil(test_file, "END_NUC3PT", keep=false)
         lines=split(reldata,"\n")
 
-        global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        global C2 = [] # one function C2(t) at gauge config μₐ
+        linematrices=[] # matrix full of pieces of each line in the relevant data file
+        C2 = [] # one function C2(t) at gauge config μₐ
 
         rownum = 0
         for k in gaugeconfigs
@@ -65,7 +65,7 @@ function MLVector(plotrange)
     # REAL DATA PROCESS
     cd(dirR)
     filelist = readdir()
-    global datamatrixR = zeros((length(gaugeconfigs),64))
+    datamatrixR = zeros((length(gaugeconfigs),64))
     fileindex = 0
     @progress (name = "$fileindex / $(length(filelist))") for i in filelist
         fileindex += 1
@@ -81,8 +81,8 @@ function MLVector(plotrange)
         reldata = readuntil(test_file, "END_NUC3PT", keep=false)
         lines=split(reldata,"\n")
 
-        global linematrices=[] # matrix full of pieces of each line in the relevant data file
-        global C2 = [] # one function C2(t) at gauge config μₐ
+        linematrices=[] # matrix full of pieces of each line in the relevant data file
+        C2 = [] # one function C2(t) at gauge config μₐ
 
         rownum = 0
         for k in gaugeconfigs
@@ -109,7 +109,7 @@ function MLVector(plotrange)
 
     # Finding fake Jackknife replicates, estimates, and errors
     JackreplicatesF = [Jackrep(datamatrixF[:,i]) for i in range(1,length(datamatrixF[1,:]),step=1)]
-    global JackestimatesF = [mean(i) for i in JackreplicatesF]
+    JackestimatesF = [mean(i) for i in JackreplicatesF]
     StderrorsF = [JackSE(i) for i in JackreplicatesF]
 
     # Finding real Jackknife replicates, estimates, and errors
@@ -118,13 +118,15 @@ function MLVector(plotrange)
     StderrorsR = [JackSE(i) for i in JackreplicatesR]
 
     # Finding fake and real Charge Jackknife replicates
-    plateaulength = 6
+    plateaulength = length(plotrange)
     ChargerepsF = zeros((39,plateaulength))
     ChargerepsR = zeros((39,plateaulength))
-    for i in range(3,8,step=1) # 2->7
-        ChargerepsF[:,i-2] = JackreplicatesF[i]
-        ChargerepsR[:,i-2] = JackreplicatesR[i]
+    for i in plotrange # 1->9
+        ChargerepsF[:,i-(plotrange[1]-1)] = JackreplicatesF[i]
+        ChargerepsR[:,i-(plotrange[1]-1)] = JackreplicatesR[i]
     end
+    PhysrepsF = ChargerepsF
+    PhysrepsR = ChargerepsR
     ChargerepsF = [mean(ChargerepsF[i,:]) for i in range(1,39,step=1)]
     ChargerepsR = [mean(ChargerepsR[i,:]) for i in range(1,39,step=1)]
 
@@ -145,9 +147,9 @@ function MLVector(plotrange)
     # Calculating fake and real chisquared values
     chisqF = 0
     chisqR = 0
-    for i in range(1,plateaulength,step=1)
-        chisqF += ((ChargeF-JackestimatesF[i+2]))^2  / (StderrorsF[i+2]) / (plateaulength-1)
-        chisqR += ((ChargeR-JackestimatesR[i+2]))^2  / (StderrorsR[i+2]) / (plateaulength-1)
+    for i in plotrange
+        chisqF += ((ChargeF-JackestimatesF[i]))^2  / (StderrorsF[i]) / (plateaulength-1)
+        chisqR += ((ChargeR-JackestimatesR[i]))^2  / (StderrorsR[i]) / (plateaulength-1)
     end
     chisqF = round(chisqF,digits=3)
     chisqR = round(chisqR,digits=3)
@@ -179,5 +181,5 @@ function MLVector(plotrange)
     annotate!(.18, 1.64, text("ML: $sigChargeF($sigChargeSEF) | χ²ᵥ = $chisqR ",6, :left, :green))
     savefig("Vector Charge C3 Plot.png")
 
-    return("Done with ML Vector!")
+    return(PhysrepsF, PhysrepsR)
 end
